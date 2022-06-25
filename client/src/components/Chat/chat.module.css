@@ -9,13 +9,14 @@
     display: grid;
     grid-template-columns: 133px 455px 1fr;
     height: 100vh;
-    width: 100%;
+    width: 100vw;
     background-color: #EFF6FC;
     padding: 30px;
+    position: relative;
 }
 
 .menuInfo{
     padding: 0px 30px;
     position: relative;
-    height: 100vh;
+    height: 100%;
 }
