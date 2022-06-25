@@ -2,7 +2,7 @@ import React, { useState, useEffect }from "react";
 import { Button, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './form.scss';
+import formStyles from './form.module.css';
 function RegForm() {
 
     const [username, setusername] = useState('');
@@ -97,35 +97,37 @@ function RegForm() {
     }
 
     return (
-        <div className="wrapperForm">
+        <div className={formStyles.container}>
+            <div className={formStyles.wrapperForm}>
             <h1>Регистрация</h1>
-            <Form layout="vertical" style={{width: "350px"}} onSubmitCapture={(e) => {submitForm(e)}} autoComplete="off"> 
-                <Form.Item label='Username' validateStatus={usernameError? 'error': 'success'} >
-                    <Input name="username" onChange={(e) => {setusername(e.target.value)}} onFocus={() => {setInUsenameInput(true)}}/>
-                    <p style={{color: 'red'}}>{usernameError}</p>
-                </Form.Item>
+                <Form layout="vertical" style={{width: "350px"}} onSubmitCapture={(e) => {submitForm(e)}} autoComplete="off"> 
+                    <Form.Item label='Username' validateStatus={usernameError? 'error': 'success'} >
+                        <Input name="username" onChange={(e) => {setusername(e.target.value)}} onFocus={() => {setInUsenameInput(true)}}/>
+                        <p style={{color: 'red'}}>{usernameError}</p>
+                    </Form.Item>
 
-                <Form.Item label="Email" validateStatus={emailError? 'error': 'success'}>
-                    <Input name="email" onChange={(e) => {setEmail(e.target.value)}} onFocus={() => {setInEmailInput(true)}}
-                    />
-                    <p style={{color: 'red'}}>{emailError}</p>
-                </Form.Item>
+                    <Form.Item label="Email" validateStatus={emailError? 'error': 'success'}>
+                        <Input name="email" onChange={(e) => {setEmail(e.target.value)}} onFocus={() => {setInEmailInput(true)}}
+                        />
+                        <p style={{color: 'red'}}>{emailError}</p>
+                    </Form.Item>
 
-                <Form.Item label="Password" validateStatus={passwordError? 'error': 'success'}>
-                    <Input.Password visibilityToggle={true} 
-                        onChange={(e) => {setPassword(e.target.value)}} 
-                        onFocus={() => {setInPasswordInput(true)}}
-                        name="password"
-                    />
-                    <p style={{color: 'red'}}>{passwordError}</p>
-                </Form.Item>
+                    <Form.Item label="Password" validateStatus={passwordError? 'error': 'success'}>
+                        <Input.Password visibilityToggle={true} 
+                            onChange={(e) => {setPassword(e.target.value)}} 
+                            onFocus={() => {setInPasswordInput(true)}}
+                            name="password"
+                        />
+                        <p style={{color: 'red'}}>{passwordError}</p>
+                    </Form.Item>
 
-                <Button type="primary" htmlType="submit" disabled={!validForm}>Sign In</Button>
+                    <Button type="primary" htmlType="submit" disabled={!validForm}>Sign In</Button>
 
-                <Link to={'/auth'}>
-                    <Button type='link'>Log In</Button>
-                </Link>
-            </Form>
+                    <Link to={'/auth'}>
+                        <Button type='link'>Log In</Button>
+                    </Link>
+                </Form>
+            </div>
         </div>
     )
 }

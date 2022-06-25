@@ -1,0 +1,38 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.menu{
+    background-color: #6E00FF;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    height: 100vh;
+}
+.profilePhotoWrapper{
+    margin-top: 30px;
+    border-radius: 50%;
+    margin-bottom: 40px;
+    border: 4px solid #5322BC;
+}
+.menuItem{
+    margin-bottom: 15px;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.menuItem:hover{
+    background: rgba(97, 45, 209, 0.9);
+    border-right: 7px solid #F3B559;
+}
+
+.logoutBtn{
+    position: absolute;
+    bottom: 40px;
+}

@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
   },
+  "proxy": "http://127.0.0.1:3000",
   "keywords": [],
   "author": "",
   "license": "ISC",

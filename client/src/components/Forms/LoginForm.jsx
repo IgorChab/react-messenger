@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { Button, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
-import './form.scss';
+import formStyles from './form.module.css';
 function LoginForm() {
 
     const [email, setEmail] = useState('');
@@ -63,29 +63,31 @@ function LoginForm() {
     }, [validEmail, validPassword])
 
   return (
-    <div className="wrapperForm">
-        <h1>Авторизация</h1>
-        <Form layout="vertical" style={{
-            width: "350px",
-        }}>
-            <Form.Item label="Email" style={{marginBottom: '10px'}} validateStatus={emailError? 'error': 'success'}>
-                <Input onChange={(e) => {setEmail(e.target.value)}} onFocus={() => {setInEmailInput(true)}}/>
-                 <p style={{color: 'red'}}>{emailError}</p>
-            </Form.Item>
-            <Form.Item label="Password" validateStatus={passwordError? 'error': 'success'}>
-                <Input.Password visibilityToggle={true}
-                    onChange={(e) => {setPassword(e.target.value)}}
-                    onFocus={() => {setInPasswordInput(true)}}
-                />
-                 <p style={{color: 'red'}}>{passwordError}</p>
-            </Form.Item>
-            <Link to={'/chat'}>
-                <Button type="primary" htmlType='submit' disabled={!validForm} >Log In</Button>
-            </Link>
-            <Link to={'/'}>
-                <Button type='link'>Sign In</Button>
-            </Link>
-        </Form>
+    <div className={formStyles.container}>
+        <div className={formStyles.wrapperForm}>
+            <h1>Авторизация</h1>
+            <Form layout="vertical" style={{
+                width: "350px",
+            }}>
+                <Form.Item label="Email" style={{marginBottom: '10px'}} validateStatus={emailError? 'error': 'success'}>
+                    <Input onChange={(e) => {setEmail(e.target.value)}} onFocus={() => {setInEmailInput(true)}}/>
+                    <p style={{color: 'red'}}>{emailError}</p>
+                </Form.Item>
+                <Form.Item label="Password" validateStatus={passwordError? 'error': 'success'}>
+                    <Input.Password visibilityToggle={true}
+                        onChange={(e) => {setPassword(e.target.value)}}
+                        onFocus={() => {setInPasswordInput(true)}}
+                    />
+                    <p style={{color: 'red'}}>{passwordError}</p>
+                </Form.Item>
+                <Link to={'/chat'}>
+                    <Button type="primary" htmlType='submit' disabled={!validForm} >Log In</Button>
+                </Link>
+                <Link to={'/'}>
+                    <Button type='link'>Sign In</Button>
+                </Link>
+            </Form>
+        </div>
     </div>
   )
 }
