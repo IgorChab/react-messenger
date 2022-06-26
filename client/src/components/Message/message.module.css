@@ -1,0 +1,22 @@
+.wrapper{
+    margin-bottom: 10px;
+}
+.text{
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 30px;
+    letter-spacing: 0.05em;
+    color: #303030;
+    background: #E7E7E7;
+    border-radius: 25px;
+    padding: 10px 20px;
+    display: inline-block;
+}
+.time{
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 23px;
+    letter-spacing: 0.05em;
+    color: #707070;
+    padding-left: 20px;
+}

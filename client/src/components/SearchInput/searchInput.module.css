@@ -17,4 +17,8 @@
     border: none;
     outline: none;
     width: 300px;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 33px;
+    letter-spacing: 0.05em;
 }

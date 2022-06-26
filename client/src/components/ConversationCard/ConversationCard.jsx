@@ -8,7 +8,7 @@ export default function ConversationCard(props) {
         <div className={styles.innerContainer}>
             <div className={styles.wrapper}>
                 <p className={styles.title}>Friends Forever</p>
-                <p>Hahahahah!</p>
+                {props.status? props.status: <p>Hahahahah!</p>}
             </div>
             <div className={`${styles.wrapper} ${styles.wrapperFlexEnd}`}>
                 <p className={styles.time}>Today, 9.52pm</p>

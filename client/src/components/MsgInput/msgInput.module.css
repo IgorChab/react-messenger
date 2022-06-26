@@ -1,0 +1,41 @@
+.container{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: absolute;
+    bottom: 30px;
+    width: 100%;
+}
+.inner_container{
+    background: rgba(239, 246, 252, 0.87);
+    border-radius: 25px;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.msgInput{
+    color: #303030;
+    border: none;
+    outline: none;
+    background: rgba(239, 246, 252, 0.87);
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: 0.05em;
+    width: 100%;
+}
+.voiceMsg{
+    background: #6E00FF;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 82px;
+    height: 82px;
+    cursor: pointer;
+}
+.wrapperScrepka{
+    cursor: pointer;
+}

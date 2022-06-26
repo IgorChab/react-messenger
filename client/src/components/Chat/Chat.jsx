@@ -3,7 +3,8 @@ import axios from 'axios';
 import chatStyles from './chat.module.css';
 import Sidebar from '../Sidebar/Sidebar';
 import SearchInput from '../SearchInput/SearchInput';
-import MenuItem from '../MenuItem/MenuItem';
+import MessageMenu from '../MessageMenu/MessageMenu';
+import Chatbox from '../Chatbox/Chatbox';
 import './nullStyle.css';
 export default function Chat() {
 
@@ -27,8 +28,9 @@ export default function Chat() {
       <Sidebar renderNewComponent={renderNewComponent}/>
       <div className={chatStyles.menuInfo}>
         <SearchInput/>
-        {newComponent? newComponent: <MenuItem title="Messages"/>}
+        {newComponent? newComponent: <MessageMenu/>}
       </div>
+      <Chatbox/>
     </div>
   )
 }

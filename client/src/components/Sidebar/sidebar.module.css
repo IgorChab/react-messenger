@@ -25,6 +25,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 .menuItem:hover{
     background: rgba(97, 45, 209, 0.9);
@@ -34,4 +35,5 @@
 .logoutBtn{
     position: absolute;
     bottom: 40px;
+    cursor: pointer;
 }
