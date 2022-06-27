@@ -38,12 +38,27 @@ app.post('/register', async (req, res) => {
         if(candidate){
             res.end(JSON.stringify({error: 'Пользователь стаким email уже существует'}))
         } else {
-            const hashPass = bcrypt.hashSync(req.body.password, 10)
+            const hashPass = bcrypt.hashSync(req.body.password, 5)
             user.create({
                 username: req.body.username,
                 email: req.body.email,
                 password: hashPass
             })
+        }
+    })
+})
+
+app.post('/login', (req, res) => {
+    user.findOne({email: req.body.email}).then(user => {
+        if (!user) {
+            req.end(JSON.stringify({error: `Пользователь с почтой: ${req.body.email} не найден`}))
+        } else {
+            const validPass = bcrypt.compareSync(req.body.password, user.password)
+            if (!validPass){
+                req.end(JSON.stringify({error: `Пользователь с паролем: ${req.body.password} не найден`}))
+            } else {
+                //session & redirect to chat
+            }
         }
     })
 })
