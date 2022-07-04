@@ -8,6 +8,7 @@ import groupsIcon from '../../img/groupIcon.svg';
 import MessageMenu from '../MessageMenu/MessageMenu';
 import GroupMenu from '../GroupMenu/GroupMenu'
 import NotificationMenu from '../NotificationMenu/NotificationMenu'
+import { Link } from 'react-router-dom';
 export default function Sidebar(props) {
 
     return(
@@ -27,9 +28,9 @@ export default function Sidebar(props) {
             <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent()}}>
                 <img src={settingsIcon} width={30} height={30}/>
             </div>
-            <div className={sidebarStyles.logoutBtn}>
+            <Link to={'/logout'} className={sidebarStyles.logoutBtn}>
                 <img src={logoutIcon} width={40} height={40}/>
-            </div>
+            </Link>
         </div>
     )
 }

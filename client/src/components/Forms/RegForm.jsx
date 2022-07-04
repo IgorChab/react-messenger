@@ -90,8 +90,8 @@ function RegForm() {
             if(res.data.error){
                 setEmailError(res.data.error);
                 setValidEmail(false);
-            } else {
-                window.location.pathname = '/auth';
+            } else if (res.data.success){
+                window.location.pathname = '/login';
             }
         })
     }
@@ -123,7 +123,7 @@ function RegForm() {
 
                     <Button type="primary" htmlType="submit" disabled={!validForm}>Sign In</Button>
 
-                    <Link to={'/auth'}>
+                    <Link to={'/login'}>
                         <Button type='link'>Log In</Button>
                     </Link>
                 </Form>

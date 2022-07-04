@@ -11,8 +11,9 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route exact path='/' element={<RegForm/>}/>
-      <Route path='/auth' element={<LoginForm/>}/>
+      <Route path='/login' element={<LoginForm/>}/>
       <Route path='/chat' element={<Chat/>}/>
+      <Route exact strict path="*" element={<h1>404. page not found</h1>}/>
     </Routes>
   </BrowserRouter>
 );

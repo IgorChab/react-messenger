@@ -1,7 +1,9 @@
 import React, { useState, useEffect} from 'react';
+import axios from 'axios';
 import { Button, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import formStyles from './form.module.css';
+
 function LoginForm() {
 
     const [email, setEmail] = useState('');
@@ -47,6 +49,7 @@ function LoginForm() {
             let validPass = re.test(password);
             if (!validPass) {
                 setPasswordError('Пароль должен содержать от 6 до 16 символов и включать цифры и символы')
+                setValidPassword(false);
             } else {
                 setPasswordError('');
                 setValidPassword(true);
@@ -62,13 +65,31 @@ function LoginForm() {
         }
     }, [validEmail, validPassword])
 
+
+    const submitForm = (e) => {
+        e.preventDefault();
+        axios.post('/login', {
+            email: email,
+            password: password
+        }).then(res => {
+            if(res.data.emailError){
+                setEmailError(res.data.emailError);
+                setValidEmail(false);
+            } else if (res.data.passwordError){
+                setPasswordError(res.data.passwordError);
+                setValidPassword(false);
+            } else if(res.data.success){
+                localStorage.setItem('token', res.data.token)
+                window.location.pathname = '/chat';
+            }
+        })
+    }
+
   return (
     <div className={formStyles.container}>
         <div className={formStyles.wrapperForm}>
             <h1>Авторизация</h1>
-            <Form layout="vertical" style={{
-                width: "350px",
-            }}>
+            <Form layout="vertical" style={{width: "350px"}} onSubmitCapture={(e) => {submitForm(e)}}>
                 <Form.Item label="Email" style={{marginBottom: '10px'}} validateStatus={emailError? 'error': 'success'}>
                     <Input onChange={(e) => {setEmail(e.target.value)}} onFocus={() => {setInEmailInput(true)}}/>
                     <p style={{color: 'red'}}>{emailError}</p>
@@ -80,9 +101,9 @@ function LoginForm() {
                     />
                     <p style={{color: 'red'}}>{passwordError}</p>
                 </Form.Item>
-                <Link to={'/chat'}>
-                    <Button type="primary" htmlType='submit' disabled={!validForm} >Log In</Button>
-                </Link>
+                
+                <Button type="primary" htmlType='submit' disabled={!validForm} >Log In</Button>
+                
                 <Link to={'/'}>
                     <Button type='link'>Sign In</Button>
                 </Link>

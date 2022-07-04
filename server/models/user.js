@@ -8,6 +8,13 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String
+    },
+    activationLink: {
+        type: String
+    },
+    isActivated: {
+        type: Boolean,
+        default: false
     }
 })
 

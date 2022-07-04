@@ -8,13 +8,17 @@ import Chatbox from '../Chatbox/Chatbox';
 import './nullStyle.css';
 export default function Chat() {
 
-  // const [data, setData] = useState(null);
+  const [data, setData] = useState(null);
 
-  // useEffect(() => {
-  //   axios.get('/api').then(res => {
-  //     setData(res.data.message)
-  //   })
-  // }, [data])
+  useEffect(() => {
+    axios.get('/api', {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    }).then(res => {
+      setData(res.data.message)
+    })
+  }, [data])
 
   const [newComponent, setNewComponent] = useState();
 
@@ -24,6 +28,9 @@ export default function Chat() {
   }
 
   return (
+    data? 
+    <div>data</div>
+    :
     <div className={chatStyles.mainFrame}>
       <Sidebar renderNewComponent={renderNewComponent}/>
       <div className={chatStyles.menuInfo}>
