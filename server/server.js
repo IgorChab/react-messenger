@@ -14,7 +14,10 @@ const errorMiddleware = require('./middlewares/error-middleware')
 
 app.use(bodyParser.json())
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}));
 app.use(router);
 app.use(errorMiddleware);
 

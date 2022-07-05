@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Button, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import formStyles from './form.module.css';
+import { useContext } from 'react';
+import { Context } from '../..';
 
 function LoginForm() {
 
@@ -66,30 +68,14 @@ function LoginForm() {
     }, [validEmail, validPassword])
 
 
-    const submitForm = (e) => {
-        e.preventDefault();
-        axios.post('/login', {
-            email: email,
-            password: password
-        }).then(res => {
-            if(res.data.emailError){
-                setEmailError(res.data.emailError);
-                setValidEmail(false);
-            } else if (res.data.passwordError){
-                setPasswordError(res.data.passwordError);
-                setValidPassword(false);
-            } else if(res.data.success){
-                localStorage.setItem('token', res.data.token)
-                window.location.pathname = '/chat';
-            }
-        })
-    }
+
+    const {store} = useContext(Context);
 
   return (
     <div className={formStyles.container}>
         <div className={formStyles.wrapperForm}>
             <h1>Авторизация</h1>
-            <Form layout="vertical" style={{width: "350px"}} onSubmitCapture={(e) => {submitForm(e)}}>
+            <Form layout="vertical" style={{width: "350px"}} >
                 <Form.Item label="Email" style={{marginBottom: '10px'}} validateStatus={emailError? 'error': 'success'}>
                     <Input onChange={(e) => {setEmail(e.target.value)}} onFocus={() => {setInEmailInput(true)}}/>
                     <p style={{color: 'red'}}>{emailError}</p>
@@ -102,7 +88,7 @@ function LoginForm() {
                     <p style={{color: 'red'}}>{passwordError}</p>
                 </Form.Item>
                 
-                <Button type="primary" htmlType='submit' disabled={!validForm} >Log In</Button>
+                <Button type="primary" htmlType='submit' disabled={!validForm} onClick={() => {store.login(email, password)}}>Log In</Button>
                 
                 <Link to={'/'}>
                     <Button type='link'>Sign In</Button>

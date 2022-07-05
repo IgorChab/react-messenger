@@ -3,6 +3,9 @@ import { Button, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import formStyles from './form.module.css';
+import { useContext } from "react";
+import { Context } from "../..";
+import {useNavigate} from 'react-router-dom'
 function RegForm() {
 
     const [username, setusername] = useState('');
@@ -80,27 +83,39 @@ function RegForm() {
         }
     }, [validUsername, validEmail, validPassword])
 
-    const submitForm = (e) => {
-        e.preventDefault();
-        axios.post('/register', {
-            username: username,
-            email: email,
-            password: password
-        }).then(res => {
-            if(res.data.error){
-                setEmailError(res.data.error);
-                setValidEmail(false);
-            } else if (res.data.success){
-                window.location.pathname = '/login';
-            }
-        })
-    }
+    // const submitForm = (e) => {
+    //     e.preventDefault();
+    //     axios.post('/register', {
+    //         username: username,
+    //         email: email,
+    //         password: password
+    //     }).then(res => {
+    //         if(res.data.error){
+    //             setEmailError(res.data.error);
+    //             setValidEmail(false);
+    //         } else if (res.data.success){
+    //             window.location.pathname = '/login';
+    //         }
+    //     })
+    // }
+    // onSubmitCapture={(e) => {submitForm(e)}}
+
+    const {store} = useContext(Context);
+
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if(store.isAuth == true){
+          navigate('/chat');
+        }
+      }, [store.isAuth])
 
     return (
         <div className={formStyles.container}>
             <div className={formStyles.wrapperForm}>
             <h1>Регистрация</h1>
-                <Form layout="vertical" style={{width: "350px"}} onSubmitCapture={(e) => {submitForm(e)}} autoComplete="off"> 
+                <Form layout="vertical" style={{width: "350px"}}  autoComplete="off"> 
                     <Form.Item label='Username' validateStatus={usernameError? 'error': 'success'} >
                         <Input name="username" onChange={(e) => {setusername(e.target.value)}} onFocus={() => {setInUsenameInput(true)}}/>
                         <p style={{color: 'red'}}>{usernameError}</p>
@@ -121,7 +136,7 @@ function RegForm() {
                         <p style={{color: 'red'}}>{passwordError}</p>
                     </Form.Item>
 
-                    <Button type="primary" htmlType="submit" disabled={!validForm}>Sign In</Button>
+                    <Button type="primary" htmlType="submit" disabled={!validForm} onClick={() => {store.registration(username, email, password)}}>Sign In</Button>
 
                     <Link to={'/login'}>
                         <Button type='link'>Log In</Button>

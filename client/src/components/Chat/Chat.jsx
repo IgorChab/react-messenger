@@ -6,19 +6,24 @@ import SearchInput from '../SearchInput/SearchInput';
 import MessageMenu from '../MessageMenu/MessageMenu';
 import Chatbox from '../Chatbox/Chatbox';
 import './nullStyle.css';
+import {useNavigate} from 'react-router-dom'
+import { useContext } from 'react';
+import { Context } from '../..';
 export default function Chat() {
+
+  const {store} = useContext(Context)
 
   const [data, setData] = useState(null);
 
-  useEffect(() => {
-    axios.get('/api', {
-      headers: {
-        authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    }).then(res => {
-      setData(res.data.message)
-    })
-  }, [data])
+  // useEffect(() => {
+  //   axios.get('/api', {
+  //     headers: {
+  //       authorization: `Bearer ${localStorage.getItem('token')}`
+  //     }
+  //   }).then(res => {
+  //     setData(res.data.message)
+  //   })
+  // }, [data])
 
   const [newComponent, setNewComponent] = useState();
 
@@ -27,10 +32,16 @@ export default function Chat() {
     console.log(value);
   }
 
+
+  const navigate = useNavigate()
+
+    useEffect(() => {
+        if(store.isAuth == false){
+          navigate('/')
+        }
+      }, [store.isAuth])
+
   return (
-    data? 
-    <div>data</div>
-    :
     <div className={chatStyles.mainFrame}>
       <Sidebar renderNewComponent={renderNewComponent}/>
       <div className={chatStyles.menuInfo}>
