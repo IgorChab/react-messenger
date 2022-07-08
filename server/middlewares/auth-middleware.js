@@ -15,7 +15,6 @@ module.exports = (req, res, next) => {
         if(!userData){
             return next(ApiError.UnauthtorizedError())
         }
-
         req.user = userData;
         next()
     } catch(e) {

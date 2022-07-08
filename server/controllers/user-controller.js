@@ -1,4 +1,5 @@
 const userService = require('../services/user-service')
+const mailService = require('../services/mail-service');
 class UserController {
 
     async registration(req, res, next){
@@ -16,7 +17,10 @@ class UserController {
         try {
             const {email, password} = req.body;
             const userData = await userService.login(email, password);
-            res.cookie('refreshToken', userData.refreshToken, {maxAge: 24 * 30 * 60 * 60 * 1000, httpOnly: true})
+            if(userData.user.isActivated == false){
+                await mailService.sendActivationMail(email, `${process.env.API_URL}/activate/${userData.user.activationLink}`);
+            }
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 24 * 30 * 60 * 60 * 1000, httpOnly: true});
             return res.json(userData)
         } catch (e) {
             next(e)
@@ -27,7 +31,7 @@ class UserController {
         try {
             const activationLink = req.params.link;
             await userService.activate(activationLink);
-            return res.redirect(process.env.CLIENT_URL);
+            return res.redirect(`${process.env.CLIENT_URL}/chat`);
         } catch (e) {
             next(e)
         }
@@ -64,6 +68,19 @@ class UserController {
             next(e)
         }
     }
+
+
+    async findUser(req, res, next){
+        try {
+            const {findString} = req.body;
+            const user = await userService.findUser(findString);
+            return res.json(user)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+
 }
 
 module.exports = new UserController();

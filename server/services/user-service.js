@@ -1,10 +1,10 @@
 const userModel = require('../models/user');
-const mailService = require('../services/mail-service');
 const bcrypt = require('bcrypt');
 const tokenService = require('../services/token-service');
 const UserDto = require('../dtos/user-dto');
 const { v4: uuidv4 } = require('uuid');
 const ApiError = require('../api-error');
+const mongoose = require('mongoose');
 
 class UserService {
 
@@ -23,7 +23,6 @@ class UserService {
             activationLink: activationLink
         });
 
-        mailService.sendActivationMail(email, `${process.env.API_URL}/activate/${activationLink}`)
         const userDto = new UserDto(user);
         const tokens = await tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -54,7 +53,6 @@ class UserService {
         if (!validPass){
             throw ApiError.BadRequest(`Пользователь с таким паролем не найден`);
         }
-
         const userDto = new UserDto(user);
         const tokens = await tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -93,6 +91,18 @@ class UserService {
     async getAllUsers(){
         const users = await userModel.find()
         return users;
+    }
+
+
+    async findUser(findString){
+        const user = await userModel.findOne({$or: [{username: findString}, {email: findString}, {id: findString}]})
+        console.log(user)
+        if(!user){
+            throw ApiError.BadRequest('Пользователь не найден');
+        }
+        const userDto = new UserDto(user);
+        console.log(userDto)
+        return userDto;
     }
 }
 
