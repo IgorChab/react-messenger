@@ -7,13 +7,16 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {maxHttpBufferSize: 1e8, pingTimeout: 60000});
 const port = process.env.port || 5000;
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const router = require('./router');
-const errorMiddleware = require('./middlewares/error-middleware')
+const errorMiddleware = require('./middlewares/error-middleware');
+
+
 
 app.use(bodyParser.json())
 app.use(cookieParser());
+app.use(express.json({extended: true}));
+app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(cors({
     credentials: true,
 }));

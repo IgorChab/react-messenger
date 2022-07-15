@@ -5,6 +5,7 @@ const UserDto = require('../dtos/user-dto');
 const { v4: uuidv4 } = require('uuid');
 const ApiError = require('../api-error');
 const mongoose = require('mongoose');
+const conversationModel = require('../models/conversation');
 
 class UserService {
 
@@ -20,7 +21,8 @@ class UserService {
             username: username,
             email: email,
             password: hashPass,
-            activationLink: activationLink
+            activationLink: activationLink,
+            profilePhoto: ''
         });
 
         const userDto = new UserDto(user);
@@ -29,7 +31,7 @@ class UserService {
         
         return {
             ...tokens,
-            user: userDto
+            user: userDto,
         }
     }
 
@@ -59,7 +61,8 @@ class UserService {
 
         return {
             ...tokens,
-            user: userDto
+            user: userDto,
+            activationLink: user.activationLink
         }
     }
 
@@ -88,21 +91,63 @@ class UserService {
         }
     }
 
-    async getAllUsers(){
-        const users = await userModel.find()
-        return users;
-    }
-
 
     async findUser(findString){
-        const user = await userModel.findOne({$or: [{username: findString}, {email: findString}, {id: findString}]})
-        console.log(user)
+        const user = await userModel.findOne({$or: [{username: findString}, {email: findString}]})
         if(!user){
+            if (findString.match(/^[0-9a-fA-F]{24}$/)) {
+                var user2 = await userModel.findById(findString)
+                var userDto2 = new UserDto(user2);
+                return userDto2;
+            }
+        }
+        if(!user && !user2){
             throw ApiError.BadRequest('Пользователь не найден');
         }
         const userDto = new UserDto(user);
-        console.log(userDto)
         return userDto;
+    }
+
+
+    async addUser(id){
+        const user = await userModel.findById(id);
+        user.people.push({
+
+        })
+    }
+
+    async addProfilePhoto(photo, id){
+        const user = await userModel.findById(id);
+        user.profilePhoto = photo;
+        user.save();
+        return user.profilePhoto;
+    }
+
+    async createConv(senderId, reciverId){
+        const existConv = await conversationModel.findOne({senderId: senderId, reciverId: reciverId})
+        if(existConv){
+            throw ApiError.BadRequest('Пользователь уже добавлен');
+        }
+        const conv = await conversationModel.create({
+            senderId: senderId,
+            reciverId: reciverId
+        });
+        return conv;
+    }
+
+    async getConv(senderId){
+        const conv = await conversationModel.find({$or: [{senderId: senderId}, {reciverId: senderId}]})
+        return conv;
+    }
+
+    async getUsers(reciverId){
+        const users = await Promise.all(
+            reciverId.map(id => {
+                return userModel.findById(id).select('id username profilePhoto')
+                
+            })
+        )
+        return users
     }
 }
 
