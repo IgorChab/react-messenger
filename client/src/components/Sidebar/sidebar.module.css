@@ -17,6 +17,11 @@
     border-radius: 50%;
     margin-bottom: 40px;
     border: 4px solid #5322BC;
+    width: 78px;
+    height: 78px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .menuItem{
     margin-bottom: 15px;
@@ -36,4 +41,17 @@
     position: absolute;
     bottom: 40px;
     cursor: pointer;
+}
+
+.charAvatar{
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
+.avatar{
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
 }

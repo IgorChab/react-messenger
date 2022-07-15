@@ -2,10 +2,9 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    position: absolute;
-    bottom: 30px;
     width: 100%;
 }
+
 .inner_container{
     background: rgba(239, 246, 252, 0.87);
     border-radius: 25px;

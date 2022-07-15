@@ -8,16 +8,29 @@ import groupsIcon from '../../img/groupIcon.svg';
 import MessageMenu from '../MessageMenu/MessageMenu';
 import GroupMenu from '../GroupMenu/GroupMenu'
 import NotificationMenu from '../NotificationMenu/NotificationMenu'
+import Settings from '../Settings/Settings'
 import { useContext } from 'react';
 import { Context } from '../..';
-export default function Sidebar(props) {
+import {observer} from 'mobx-react-lite'
+function Sidebar(props) {
 
     const {store} = useContext(Context)
+
+    // if(!store.user.username.includes(' ')){
+    //     var charAvatar = store.user.username[0].toUpperCase();
+    // } else {
+    //     var charAvatar = store.user.username[0].toUpperCase() + store.user.username.split(' ')[1][0].toUpperCase();
+    // }
+
+    const charAvatar = store.generateAvatar(store.user.username);
 
     return(
         <div className={sidebarStyles.menu}>
             <div className={sidebarStyles.profilePhotoWrapper}>
-                <img src=''  width={78} height={78}/>
+                {store.user.profilePhoto
+                    ? <img src={store.user.profilePhoto} className={sidebarStyles.avatar}/>
+                    : <p class={sidebarStyles.charAvatar}>{charAvatar}</p>
+                }
             </div>
             <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent(<MessageMenu/>)}}>
                 <img src={messageIcon} width={30} height={30}/>
@@ -28,12 +41,14 @@ export default function Sidebar(props) {
             <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent(<NotificationMenu/>)}}>
                 <img src={notificationIcon} width={30} height={30}/>
             </div>
-            <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent()}}>
+            <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent(<Settings/>, 'settings')}}>
                 <img src={settingsIcon} width={30} height={30}/>
             </div>
             <div className={sidebarStyles.logoutBtn} onClick={() => {store.logout()}}>
-                <img src={logoutIcon} width={40} height={40}/>
+                <img src={logoutIcon} width={30} height={30}/>
             </div>
         </div>
     )
 }
+
+export default observer(Sidebar)

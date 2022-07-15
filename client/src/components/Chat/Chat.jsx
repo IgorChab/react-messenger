@@ -5,8 +5,8 @@ import Sidebar from '../Sidebar/Sidebar';
 import SearchInput from '../SearchInput/SearchInput';
 import MessageMenu from '../MessageMenu/MessageMenu';
 import Chatbox from '../Chatbox/Chatbox';
+import Settings from '../Settings/Settings'
 import './nullStyle.css';
-import {useNavigate} from 'react-router-dom'
 import { useContext } from 'react';
 import { Context } from '../..';
 export default function Chat() {
@@ -27,26 +27,19 @@ export default function Chat() {
 
   const [newComponent, setNewComponent] = useState();
 
-  function renderNewComponent(value) {
-    setNewComponent(value)
-    console.log(value);
+  function renderNewComponent(value, type) {
+    setNewComponent({
+      value,
+      type
+    })
   }
-
-
-  const navigate = useNavigate()
-
-    useEffect(() => {
-        if(store.isAuth == false){
-          navigate('/')
-        }
-      }, [store.isAuth])
 
   return (
     <div className={chatStyles.mainFrame}>
       <Sidebar renderNewComponent={renderNewComponent}/>
       <div className={chatStyles.menuInfo}>
-        <SearchInput/>
-        {newComponent? newComponent: <MessageMenu/>}
+        {newComponent?.type == 'settings'? '' : <SearchInput/>}
+        {newComponent? newComponent.value: <MessageMenu/>}
       </div>
       <Chatbox/>
     </div>

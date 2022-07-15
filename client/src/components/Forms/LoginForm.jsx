@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import formStyles from './form.module.css';
 import { useContext } from 'react';
 import { Context } from '../..';
+import {observer} from 'mobx-react-lite'
 
 function LoginForm() {
 
@@ -67,9 +68,21 @@ function LoginForm() {
         }
     }, [validEmail, validPassword])
 
-
-
     const {store} = useContext(Context);
+
+    function loginHendler(){
+        store.login(email, password)
+            .then(err => {
+                if(err){
+                    const typeErr = err.split(' ')[3];
+                    if(typeErr == 'почтой'){
+                        setEmailError(err);
+                    } else if (typeErr== 'паролем'){
+                        setPasswordError(err)
+                    }
+                }
+            })
+    }
 
   return (
     <div className={formStyles.container}>
@@ -88,7 +101,8 @@ function LoginForm() {
                     <p style={{color: 'red'}}>{passwordError}</p>
                 </Form.Item>
                 
-                <Button type="primary" htmlType='submit' disabled={!validForm} onClick={() => {store.login(email, password)}}>Log In</Button>
+                <Button type="primary" disabled={!validForm} onClick={() => {loginHendler()}}>
+                Log In</Button>
                 
                 <Link to={'/'}>
                     <Button type='link'>Sign In</Button>
@@ -99,4 +113,4 @@ function LoginForm() {
   )
 }
 
-export default LoginForm;
+export default observer(LoginForm);

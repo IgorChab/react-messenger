@@ -5,7 +5,7 @@ import axios from 'axios';
 import formStyles from './form.module.css';
 import { useContext } from "react";
 import { Context } from "../..";
-import {useNavigate} from 'react-router-dom'
+import {observer} from 'mobx-react-lite'
 function RegForm() {
 
     const [username, setusername] = useState('');
@@ -103,14 +103,6 @@ function RegForm() {
     const {store} = useContext(Context);
 
 
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if(store.isAuth == true){
-          navigate('/chat');
-        }
-      }, [store.isAuth])
-
     return (
         <div className={formStyles.container}>
             <div className={formStyles.wrapperForm}>
@@ -136,7 +128,9 @@ function RegForm() {
                         <p style={{color: 'red'}}>{passwordError}</p>
                     </Form.Item>
 
-                    <Button type="primary" htmlType="submit" disabled={!validForm} onClick={() => {store.registration(username, email, password)}}>Sign In</Button>
+                    <Button type="primary" disabled={!validForm} onClick={() => {store.registration(username, email, password)
+                        .then(err => {setEmailError(err); setValidForm(false);})}}>
+                    Sign In</Button>
 
                     <Link to={'/login'}>
                         <Button type='link'>Log In</Button>
@@ -147,4 +141,4 @@ function RegForm() {
     )
 }
 
-export default RegForm;
+export default observer(RegForm);
