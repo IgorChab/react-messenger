@@ -1,3 +1,6 @@
+p{
+    margin-bottom: 0;
+}
 .container{
     display: flex;
     flex-direction: column;
@@ -19,4 +22,39 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
+}
+.titlePopUp{
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.wrapInput{
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: inline-block;
+    width: 160px;
+}
+.wrapInput input{
+    outline: none;
+    border: 1px solid #333;
+    padding: 2px 6px;
+}
+.btn{
+    border: 1px solid rgb(125, 74, 189);
+    padding: 5px 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.btn:hover{
+    color: #fff;
+    background-color: rgb(125, 74, 189);
+    transition: 0.3s;
+}
+.wrapModal{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }

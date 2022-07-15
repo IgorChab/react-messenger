@@ -61,17 +61,6 @@ class UserController {
     }
 
 
-    async getUsers(req, res, next){
-        try {
-            const reciverId = req.body.reciverId;
-            const users = await userService.getUsers(reciverId);
-            return res.json(users)
-        } catch (e) {
-            next(e)
-        }
-    }
-
-
     async findUser(req, res, next){
         try {
             const {findString} = req.body;
@@ -84,8 +73,6 @@ class UserController {
 
     async uploadAvatar(req, res, next){
         try {
-            console.log(req.user)
-            console.log(req.file)
             const photo = await userService.addProfilePhoto(req.file.path, req.user.id)
             return res.json(photo)
         } catch (e) {
@@ -94,21 +81,44 @@ class UserController {
     }
 
 
-    async createConv(req, res, next){
+    async createContact(req, res, next){
         try {
-            const {senderId, reciverId} = req.body;
-            const conv = await userService.createConv(senderId, reciverId);
-            return res.json(conv)
+            const friendId = req.params.friendId;
+            const userId = req.user.id;
+            const contact = await userService.createContact(userId, friendId);
+            return res.json(contact)
         } catch (e) {
             next(e)
         }
     }
 
-    async getConv(req, res, next){
+    async getContacts(req, res, next){
         try {
-            const {senderId} = req.body;
-            const conv = await userService.getConv(senderId);
-            return res.json(conv)
+            const userId = req.params.userId;
+            const contacts = await userService.getContacts(userId);
+            return res.json(contacts)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async createRoom(req, res, next){
+        try {
+            const roomname = req.body.roomname
+            const file = req.file?.path
+            const userId = req.user.id
+            const room = await userService.createRoom(roomname, file, userId);
+            return res.json(room)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getRooms(req, res, next){
+        try {
+            const userId = req.user.id
+            const rooms = await userService.getRooms(userId);
+            return res.json(rooms)
         } catch (e) {
             next(e)
         }

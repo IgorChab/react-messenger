@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     email: {
-        type: String,
+        type: String
     },
     password: {
         type: String
@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema({
     },
     profilePhoto: {
         type: String
+    },
+    contacts: {
+        type: Array
+    },
+    rooms: {
+        type: Array
     }
 })
 

@@ -20,18 +20,27 @@ export default class UserService {
         return response.data;
     }
 
-    static async createConv(senderId, reciverId){
-        const response = await $api.post('/createConv', {senderId, reciverId})
+    static async createContact(friendId){
+        const response = await $api.get(`/createContact/${friendId}`)
         return response;
     }
 
-    static async getConv(senderId){
-        const response = await $api.post('/getConv', {senderId})
+    static async getContacts(userId){
+        const response = await $api.get(`/getContacts/${userId}`)
         return response.data;
     }
 
-    static async getUsers(reciverId){
-        const response = await $api.post('/getUsers', {reciverId})
+    static async createRoom(data){
+        const response = await $api.post('/createRoom', data, {
+            headers: {
+                'Content-type': 'multipart/form-data'
+            }
+        })
+        return response.data;
+    }
+
+    static async getRooms(){
+        const response = await $api.get('/getRooms')
         return response.data;
     }
 

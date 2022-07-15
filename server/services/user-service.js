@@ -4,8 +4,7 @@ const tokenService = require('../services/token-service');
 const UserDto = require('../dtos/user-dto');
 const { v4: uuidv4 } = require('uuid');
 const ApiError = require('../api-error');
-const mongoose = require('mongoose');
-const conversationModel = require('../models/conversation');
+
 
 class UserService {
 
@@ -22,7 +21,7 @@ class UserService {
             email: email,
             password: hashPass,
             activationLink: activationLink,
-            profilePhoto: ''
+            profilePhoto: '',
         });
 
         const userDto = new UserDto(user);
@@ -91,7 +90,6 @@ class UserService {
         }
     }
 
-
     async findUser(findString){
         const user = await userModel.findOne({$or: [{username: findString}, {email: findString}]})
         if(!user){
@@ -108,14 +106,6 @@ class UserService {
         return userDto;
     }
 
-
-    async addUser(id){
-        const user = await userModel.findById(id);
-        user.people.push({
-
-        })
-    }
-
     async addProfilePhoto(photo, id){
         const user = await userModel.findById(id);
         user.profilePhoto = photo;
@@ -123,32 +113,48 @@ class UserService {
         return user.profilePhoto;
     }
 
-    async createConv(senderId, reciverId){
-        const existConv = await conversationModel.findOne({senderId: senderId, reciverId: reciverId})
-        if(existConv){
+    async createContact(userId, friendId){
+        const user = await userModel.findById(userId)
+        const existContact = user.contacts.includes(friendId)
+        if(existContact){
             throw ApiError.BadRequest('Пользователь уже добавлен');
         }
-        const conv = await conversationModel.create({
-            senderId: senderId,
-            reciverId: reciverId
-        });
-        return conv;
+        user.contacts.push(friendId)
+        user.save()
+        const contact = await userModel.findById(friendId).select('id username profilePhoto')
+        return contact;
     }
 
-    async getConv(senderId){
-        const conv = await conversationModel.find({$or: [{senderId: senderId}, {reciverId: senderId}]})
-        return conv;
-    }
-
-    async getUsers(reciverId){
-        const users = await Promise.all(
-            reciverId.map(id => {
+    async getContacts(userId){
+        const user = await userModel.findById(userId)
+        const contacts = await Promise.all(
+            user.contacts.map(id => {
                 return userModel.findById(id).select('id username profilePhoto')
-                
             })
         )
-        return users
+        return contacts;
     }
+
+    async createRoom(roomname, file, userId){
+        const user = await userModel.findById(userId)
+        user.rooms.push({
+            key: uuidv4(),
+            roomname: roomname,
+            file: file? file : ''
+        })
+        user.save()
+        return {
+            key: uuidv4(),
+            roomname: roomname,
+            file: file
+        };
+    }
+
+    async getRooms(userId){
+        const user = await userModel.findById(userId)
+        return user.rooms;
+    }
+
 }
 
 module.exports = new UserService()

@@ -9,6 +9,9 @@ export default class Store {
 
     isAuth = false;
 
+    currentChat = {
+
+    }
 
     constructor() {
         makeAutoObservable(this)
@@ -24,6 +27,10 @@ export default class Store {
 
     updateProfilePhoto(photo){
         this.user.profilePhoto = photo
+    }
+
+    setCurrentChat(obj){
+        this.currentChat = obj
     }
 
     async login(email, password){
