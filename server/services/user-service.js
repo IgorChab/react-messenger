@@ -4,6 +4,7 @@ const tokenService = require('../services/token-service');
 const UserDto = require('../dtos/user-dto');
 const { v4: uuidv4 } = require('uuid');
 const ApiError = require('../api-error');
+const messageModel = require('../models/message')
 
 
 class UserService {
@@ -153,6 +154,30 @@ class UserService {
     async getRooms(userId){
         const user = await userModel.findById(userId)
         return user.rooms;
+    }
+
+    async saveMsg(reciver, sender, text, media){
+        Date.prototype.timeNow = function () {
+            return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes()
+        }
+        const date = new Date();
+        messageModel.create({
+            reciver: reciver,
+            sender: sender,
+            text: text,
+            time: date.timeNow(),
+            media: {
+                img: media?.img,
+                video: media?.video,
+                audio: media?.audio
+            }
+        })
+    }
+
+    async getMsg(reciverId, senderId){
+        const msgs = await messageModel.find({$or: [{sender: senderId, reciver: reciverId}, {sender: reciverId, reciver: senderId}]})
+        .select('reciver sender text time media')
+        return msgs;
     }
 
 }

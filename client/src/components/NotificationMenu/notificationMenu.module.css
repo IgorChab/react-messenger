@@ -8,6 +8,7 @@
     overflow-y: auto;
     margin-bottom: 20px;
     position: relative;
+    height: 100%;
 }
 .title{
     font-family: 'Roboto', sans-serif;

@@ -9,7 +9,16 @@
     flex-direction: column;
 }
 .msgContainer{
-    flex: 1 0 auto;
+    /* flex: 1 0 auto; */
+    overflow-y: scroll;
+    height: 100%;
+    margin: 20px 0px;
+}
+.msgContainer::-webkit-scrollbar{
+    width: 0px;
+    /* border-radius: 3px;
+    background-color: rgb(212, 212, 212);
+    padding-left: 10px; */
 }
 .preview{
     display: flex;

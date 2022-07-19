@@ -6,7 +6,8 @@ import MyModal from '../UI/MyModal';
 import UserService from '../../services/userSevice';
 import { useContext } from 'react';
 import { Context } from '../..';
-export default function MessageMenu() {
+import { observer } from 'mobx-react-lite';
+function GroupMenu() {
 
   const {store} = useContext(Context)
 
@@ -19,6 +20,9 @@ export default function MessageMenu() {
   const [err, setErr] = useState('')
 
   const [rooms, setRooms] = useState()
+
+  const [filteredRooms, setFilteredRooms] = useState()
+
 
   const hendleCreate = async () => {
     if(img && !img.type.includes('image')){
@@ -45,8 +49,16 @@ export default function MessageMenu() {
     store.setCurrentChat(room)
   }
 
+  useEffect(() => {
+    const filteredGroups = rooms && rooms.filter(group => group.roomname.includes(store?.query))
+    setFilteredRooms(filteredGroups)
+    // if(!filteredRooms){
+    //   setErr('Groups not found')
+    // }
+  }, [store?.query])
+
   return (
-    <div>
+    <div style={{height: '100%'}}>
         <div className={styles.container}>
             <div className={styles.wrap}>
               <p className={styles.title}>Groups</p>
@@ -74,13 +86,22 @@ export default function MessageMenu() {
               :
               ''}
             </div>
-            {rooms && rooms.map(room => (
+            {filteredRooms
+            ? filteredRooms.map(room => (
               <div onClick={() => currentChat(room)} key={room.key}>
                 <ConversationCard username={room.roomname} avatar={room.file}/>
               </div>
-            ))}
+            ))
+            : rooms && rooms.map(room => (
+              <div onClick={() => currentChat(room)} key={room.key}>
+                <ConversationCard username={room.roomname} avatar={room.file}/>
+              </div>
+            ))
+            }
             {rooms? '' : 'Loading...'}
         </div>
     </div>
   )
 }
+
+export default observer(GroupMenu)

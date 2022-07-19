@@ -13,6 +13,8 @@ export default class Store {
 
     }
 
+    query = ''
+
     constructor() {
         makeAutoObservable(this)
     }
@@ -31,6 +33,10 @@ export default class Store {
 
     setCurrentChat(obj){
         this.currentChat = obj
+    }
+
+    setQuery(query){
+        this.query = query
     }
 
     async login(email, password){

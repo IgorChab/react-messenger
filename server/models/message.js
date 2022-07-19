@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const messageSchema = new mongoose.Schema({
-    conversationId: {
+    reciver: {
         type: String
     },
     sender: {
@@ -8,6 +8,12 @@ const messageSchema = new mongoose.Schema({
     },
     text: {
         type: String
+    },
+    time: {
+        type: String
+    },
+    media: {
+       type: Object 
     }
 })
 

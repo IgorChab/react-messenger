@@ -124,6 +124,37 @@ class UserController {
         }
     }
 
+
+    async saveMsg(req, res, next){
+        try {
+            const {reciver, sender, text} = req.body
+            const {img, video, audio} = req.files
+            
+            const myImg = img? img.map(file => file.path) : ''
+            const myVideo = video? video.map(file => file.path) : ''
+            const myAudio = audio? audio.map(file => file.path) : ''
+            
+            const media = {
+                img: myImg,
+                video: myVideo,
+                audio: myAudio
+            }
+            userService.saveMsg(reciver, sender, text, media);
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getMsg(req, res, next){
+        try {
+            const {reciverId, senderId} = req.body
+            const msgs = await userService.getMsg(reciverId, senderId);
+            return res.json(msgs)
+        } catch (e) {
+            next(e)
+        }
+    }
+
 }
 
 module.exports = new UserController();

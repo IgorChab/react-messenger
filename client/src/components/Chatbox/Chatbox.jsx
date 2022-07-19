@@ -8,9 +8,25 @@ import { Context } from '../..'
 import {io} from 'socket.io-client'
 import { useState } from 'react'
 import {observer} from 'mobx-react-lite'
+import { useEffect } from 'react'
+import UserService from '../../services/userSevice'
 function Chatbox() {
 
   const {store} = useContext(Context)
+
+  const [messages, setMessages] = useState()
+
+  const [newMsg, setNewMsg] = useState()
+
+  useEffect(() => {
+    messages && setMessages([...messages, newMsg])
+  }, [newMsg])
+
+  useEffect(() => {
+    UserService.getMsg(store.user.id, store.currentChat._id || store.currentChat.key).then(msgs => {
+      setMessages(msgs)
+    })
+  }, [store.currentChat?._id, store.currentChat?.key])
 
   return (
     <div className={styles.container}>
@@ -24,10 +40,11 @@ function Chatbox() {
             ? store.currentChat.profilePhoto
             : store.currentChat.file}/>
           <div className={styles.msgContainer}>
-              <Message/>
-              <Message/>
+              {messages && messages.map(msg => (
+                <Message text={msg.text} time={msg.time} key={msg._id} own={msg.sender === store.user.id? true : false} media={msg.media}/>
+              ))}
           </div>
-          <MsgInput/>
+          <MsgInput newMsg={setNewMsg}/>
         </>
         : 
         <div className={styles.preview}>

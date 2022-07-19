@@ -23,6 +23,10 @@ function MessageMenu() {
 
   const [error, setError] = useState('')
 
+  const [filterPeople, setFilterPeople] = useState()
+
+  const [err, setErr] = useState()
+
   async function findUser(findString){
     if(findString.trim().length == 0){
       setError('Поле не может быть пустым');
@@ -65,8 +69,16 @@ function MessageMenu() {
     store.setCurrentChat(user)
   }
 
+  useEffect(() => {
+    const filteredPeople = people && people.filter(user => user.username.includes(store?.query))
+    setFilterPeople(filteredPeople)
+    if(!filteredPeople){
+      setErr('Users not found')
+    }
+  }, [store?.query])
+
   return (
-    <div>
+    <div style={{height: '100%'}}>
         <div className={styles.container}>
             <div className={styles.wrap}>
               <p className={styles.title}>People</p>
@@ -101,12 +113,20 @@ function MessageMenu() {
                 </div>
               </MyModal> : ''}
             </div>
-            {people && people.map(user => (
+            {filterPeople
+            ? filterPeople && filterPeople.map(user => (
               <div onClick={e => currentChat(user)} key={user._id}>
                 <ConversationCard username={user.username} avatar={user.profilePhoto}/>
               </div>
-            ))}
+            )) 
+            : people && people.map(user => (
+              <div onClick={e => currentChat(user)} key={user._id}>
+                <ConversationCard username={user.username} avatar={user.profilePhoto}/>
+              </div>
+            ))
+            }
             {people? '' : 'Loading...'}
+            
         </div>
     </div>
   )

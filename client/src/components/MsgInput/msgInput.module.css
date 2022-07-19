@@ -4,7 +4,6 @@
     gap: 20px;
     width: 100%;
 }
-
 .inner_container{
     background: rgba(239, 246, 252, 0.87);
     border-radius: 25px;
@@ -34,7 +33,19 @@
     width: 82px;
     height: 82px;
     cursor: pointer;
+    outline: none;
+    border: none;
 }
 .wrapperScrepka{
     cursor: pointer;
+}
+.preview{
+    display: flex;
+    gap: 10px;
+}
+.imgPreview{
+    width: 100px;
+    height: 70px;
+    border-radius: 10px;
+    margin: 10px 0px;
 }

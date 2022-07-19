@@ -16,4 +16,6 @@ router.get('/createContact/:friendId', authMiddleware, userController.createCont
 router.get('/getContacts/:userId', authMiddleware, userController.getContacts)
 router.post('/createRoom', authMiddleware, fileMiddleware.single('avatar'), userController.createRoom)
 router.get('/getRooms', authMiddleware, userController.getRooms)
+router.post('/saveMsg', authMiddleware, fileMiddleware.fields([{name: 'img'}, {name: 'audio'}, {name: 'video'}]), userController.saveMsg)
+router.post('/getMsg', authMiddleware, userController.getMsg)
 module.exports = router;

@@ -44,4 +44,18 @@ export default class UserService {
         return response.data;
     }
 
+    static async saveMsg(msg){
+        const response = await $api.post('/saveMsg', msg, {
+            headers: {
+                'Content-type': 'multipart/form-data'
+            }
+        })
+        return response.data;
+    }
+
+    static async getMsg(senderId, reciverId){
+        const response = await $api.post('/getMsg', {senderId, reciverId})
+        return response.data;
+    }
+
 }
