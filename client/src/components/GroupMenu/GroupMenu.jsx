@@ -30,13 +30,15 @@ function GroupMenu() {
     }
     if(!roomname){
       setErr('Room name cannot be empty')
+      return
     }
     const data = new FormData();
     data.append('avatar', img)
     data.append('roomname', roomname)
     const room = await UserService.createRoom(data)
+    store.socket.emit('create room', room.key)
     setRooms([...rooms, room])
-    setModalActive(false)
+    err? setModalActive(true) : setModalActive(false) && setErr('')
   }
 
   useEffect(() => {
@@ -44,6 +46,10 @@ function GroupMenu() {
       setRooms(rooms)
     })
   }, [])
+
+  useEffect(() => {
+    setRooms(rooms?.filter(room => room.key !== store?.removedRoom?.key))
+  }, [store.removedRoom])
 
   const currentChat = (room) => {
     store.setCurrentChat(room)

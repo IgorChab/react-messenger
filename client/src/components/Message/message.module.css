@@ -1,17 +1,23 @@
 .wrapper{
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
     width: fit-content;
     flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 .wrapper_own{
-    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     flex-wrap: wrap;
+    margin-bottom: 10px;
 }
+/* .wrapper:last-child{
+    margin-bottom: 30px;
+}
+.wrapper_own:last-child{
+    margin-bottom: 30px;
+} */
 .text{
     font-weight: 400;
     font-size: 15px;
@@ -42,7 +48,6 @@
 .time{
     font-weight: 300;
     font-size: 12px;
-    line-height: 23px;
     letter-spacing: 0.05em;
     color: #707070;
     padding-left: 20px;
@@ -67,4 +72,19 @@
 }
 .fileAudio{
     width: 300px;
+}
+.wrapAvatar{
+    display: flex;
+    gap: 10px;
+}
+.avatar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+.avatar img{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
 }

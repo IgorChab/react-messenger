@@ -1,14 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import styles from './slider.module.css'
 import stepBtn from '../../img/stepBtn.svg'
-export default function Slider({openImg, allImg, setSlider}) {
+export default function Slider({openImg, allImg, setSlider, preview}) {
 
-    const [currentIndex, setCurrentIndex] = useState()
-
-    useEffect(() => {
-        let index = allImg.indexOf(openImg)
-        setCurrentIndex(index)
-    }, []) 
+    const [currentIndex, setCurrentIndex] = useState(allImg.indexOf(openImg))
 
     const next = () => {
         setCurrentIndex(currentIndex == allImg.length - 1? 0 : currentIndex + 1)
@@ -25,7 +20,7 @@ export default function Slider({openImg, allImg, setSlider}) {
                 <img src={stepBtn}/>
             </div>
             <div className={styles.container}>
-                <img src={allImg[currentIndex]} className={styles.img}/>
+                <img src={preview? URL.createObjectURL(allImg[currentIndex]) : allImg[currentIndex]} className={styles.img}/>
             </div>
             <div className={styles.stepBtn} onClick={next}>
                 <img src={stepBtn} style={{transform: 'rotateY(180deg)'}}/>

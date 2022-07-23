@@ -18,4 +18,6 @@ router.post('/createRoom', authMiddleware, fileMiddleware.single('avatar'), user
 router.get('/getRooms', authMiddleware, userController.getRooms)
 router.post('/saveMsg', authMiddleware, fileMiddleware.fields([{name: 'img'}, {name: 'audio'}, {name: 'video'}]), userController.saveMsg)
 router.post('/getMsg', authMiddleware, userController.getMsg)
+router.post('/addUserToRoom', authMiddleware, userController.addUserToRoom)
+router.post('/leaveRoom', authMiddleware, userController.leaveRoom)
 module.exports = router;

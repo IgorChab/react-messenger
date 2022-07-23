@@ -36,6 +36,9 @@
     background: rgba(97, 45, 209, 0.9);
     border-right: 7px solid #F3B559;
 }
+.menuItem:hover img{
+    margin-right: -7px;
+}
 
 .logoutBtn{
     position: absolute;

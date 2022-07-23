@@ -12,15 +12,10 @@ import Settings from '../Settings/Settings'
 import { useContext } from 'react';
 import { Context } from '../..';
 import {observer} from 'mobx-react-lite'
+import { useCallback } from 'react';
 function Sidebar(props) {
 
     const {store} = useContext(Context)
-
-    // if(!store.user.username.includes(' ')){
-    //     var charAvatar = store.user.username[0].toUpperCase();
-    // } else {
-    //     var charAvatar = store.user.username[0].toUpperCase() + store.user.username.split(' ')[1][0].toUpperCase();
-    // }
 
     const charAvatar = store.generateAvatar(store.user.username);
 

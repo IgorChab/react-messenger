@@ -1,5 +1,3 @@
-
-
 #root{
     background-color: #EFF6FC;
     padding: 44px;
@@ -8,12 +6,13 @@
 .mainFrame{
     display: grid;
     grid-template-columns: 133px 455px 1fr;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     background-color: #EFF6FC;
     padding: 30px;
     position: relative;
 }
+
 
 .menuInfo{
     padding: 0px 30px;

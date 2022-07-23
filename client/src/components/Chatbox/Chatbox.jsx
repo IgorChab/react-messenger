@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styles from './chatbox.module.css'
 import CurrentUser from '../currentUser/CurrentUser'
 import MsgInput from '../MsgInput/MsgInput'
@@ -10,6 +10,10 @@ import { useState } from 'react'
 import {observer} from 'mobx-react-lite'
 import { useEffect } from 'react'
 import UserService from '../../services/userSevice'
+import { useRef } from 'react'
+import { useMemo } from 'react'
+import welcomeGif from '../../img/welcome.gif'
+
 function Chatbox() {
 
   const {store} = useContext(Context)
@@ -19,14 +23,35 @@ function Chatbox() {
   const [newMsg, setNewMsg] = useState()
 
   useEffect(() => {
+    const socket = io()
+    socket.emit('add user', store.user.id)
+    store.setSocket(socket)
+  }, [store.user.id])
+
+  const scrollRef = useRef()
+  
+  useEffect(() => {
     messages && setMessages([...messages, newMsg])
+    scrollRef.current?.scrollIntoView({behavior: 'smooth'})
   }, [newMsg])
 
   useEffect(() => {
-    UserService.getMsg(store.user.id, store.currentChat._id || store.currentChat.key).then(msgs => {
+    store.socket?.on('send message', (msg => {
+      messages && setMessages([...messages, msg])
+    }))
+
+    return () => {
+      store.socket?.off('send message')
+    }
+  }, [messages])
+
+  useEffect(() => {
+    UserService.getMsg(store.user.id, store.currentChat.userId || store.currentChat.key).then(msgs => {
       setMessages(msgs)
+      // scrollRef.current?.scrollIntoView({behavior: 'smooth'})
     })
-  }, [store.currentChat?._id, store.currentChat?.key])
+  }, [store.currentChat?.userId, store.currentChat?.key])
+
 
   return (
     <div className={styles.container}>
@@ -38,18 +63,21 @@ function Chatbox() {
             : store.currentChat.roomname} 
             profilePhoto={store.currentChat.profilePhoto
             ? store.currentChat.profilePhoto
-            : store.currentChat.file}/>
-          <div className={styles.msgContainer}>
+            : store.currentChat.file}
+            room={store.currentChat.username? false : true}/>
+          <div className={styles.msgContainer} >
               {messages && messages.map(msg => (
-                <Message text={msg.text} time={msg.time} key={msg._id} own={msg.sender === store.user.id? true : false} media={msg.media}/>
+                <div key={msg._id} ref={scrollRef}>
+                  <Message text={msg.text} time={msg.time} own={msg.sender === store.user.id || JSON.parse(msg.sender).id === store.user.id? true : false} media={msg.media}/>
+                </div>
               ))}
           </div>
           <MsgInput newMsg={setNewMsg}/>
         </>
         : 
         <div className={styles.preview}>
-          <h1>Тут тихо... Даже слишком. 
-            Куда все девались?</h1>
+          <img src={welcomeGif}/>
+          <h1>Hello {store.user.username}, add user or choose conversation to start chat</h1>
         </div>}
     </div>
   )

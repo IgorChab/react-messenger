@@ -14,7 +14,7 @@ const messageSchema = new mongoose.Schema({
     },
     media: {
        type: Object 
-    }
+    },
 })
 
 module.exports = mongoose.model('message', messageSchema)

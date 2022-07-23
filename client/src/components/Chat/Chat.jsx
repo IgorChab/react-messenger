@@ -11,20 +11,6 @@ import { useContext } from 'react';
 import { Context } from '../..';
 export default function Chat() {
 
-  const {store} = useContext(Context)
-
-  const [data, setData] = useState(null);
-
-  // useEffect(() => {
-  //   axios.get('/api', {
-  //     headers: {
-  //       authorization: `Bearer ${localStorage.getItem('token')}`
-  //     }
-  //   }).then(res => {
-  //     setData(res.data.message)
-  //   })
-  // }, [data])
-
   const [newComponent, setNewComponent] = useState();
 
   function renderNewComponent(value, type) {

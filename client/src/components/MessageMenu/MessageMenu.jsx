@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import ConversationCard from '../ConversationCard/ConversationCard';
 import styles from './messageMenu.module.css'
 import MyBtn from '../UI/MyBtn'
@@ -19,11 +19,13 @@ function MessageMenu() {
 
   const [userData, setUserData] = useState()
 
-  const [charAvatar, setCharAvatar] = useState('');
+  const [charAvatar, setCharAvatar] = useState('')
 
   const [error, setError] = useState('')
 
   const [filterPeople, setFilterPeople] = useState()
+
+  const [online, setOnline] = useState()
 
   const [err, setErr] = useState()
 
@@ -61,8 +63,20 @@ function MessageMenu() {
   useEffect(() => {
     UserService.getContacts(store.user.id).then(people => {
       setPeople(people)
+      const contacts = people.map(user => user.userId)
+      store.socket.emit('get online', contacts)
     })
   }, [])
+
+  // useCallback(() => {
+  //   store.socket.on('get online', online => {
+  //     setOnline(online)
+  //   })
+
+  //   return () => {
+  //     store.socket.off('get online')
+  //   }
+  // }, [people, store.socket])
 
 
   const currentChat = (user) => {
@@ -115,13 +129,13 @@ function MessageMenu() {
             </div>
             {filterPeople
             ? filterPeople && filterPeople.map(user => (
-              <div onClick={e => currentChat(user)} key={user._id}>
-                <ConversationCard username={user.username} avatar={user.profilePhoto}/>
+              <div onClick={e => currentChat(user)} key={user.userId}>
+                <ConversationCard username={user.username} avatar={user.profilePhoto} msg={user.msg}/>
               </div>
             )) 
             : people && people.map(user => (
-              <div onClick={e => currentChat(user)} key={user._id}>
-                <ConversationCard username={user.username} avatar={user.profilePhoto}/>
+              <div onClick={e => currentChat(user)} key={user.userId}>
+                <ConversationCard username={user.username} avatar={user.profilePhoto} msg={user.msg}/>
               </div>
             ))
             }

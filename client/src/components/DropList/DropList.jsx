@@ -1,6 +1,8 @@
 import React, {useState} from 'react'
+import { useRef } from 'react'
+import useHover from '../../hooks/useHover'
 import styles from './dropList.module.css'
-export default function DropList({callback, setImg, setVideo, setAudio}) {
+export default function DropList({setInContainer, setImg, setVideo, setAudio}) {
 
   const hendlerImg = (files) => {
     const fileTypes = ["image/png", "image/jpeg", 'image/jpg', 'image/gif']
@@ -41,12 +43,12 @@ export default function DropList({callback, setImg, setVideo, setAudio}) {
     setAudio([...files])
   }
 
+  const ref = useRef()
+
+  setInContainer(useHover(ref))
+
   return (
-    <div className={styles.container} 
-        onMouseMove={() => {callback(true)}} 
-        onMouseLeave={() => {callback(false)}}
-        onMouseEnter={() => {callback(true)}}
-    >
+    <div className={styles.container} ref={ref}>
 
         <label htmlFor="img" className={styles.label}>Изображение</label>
         <input type="file" accept='image/*' name='img' id='img' multiple className={styles.input} onChange={e => hendlerImg(e.target.files)}/>

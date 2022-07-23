@@ -18,6 +18,12 @@
 .wrapper{
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    /* text-overflow: ellipsis;  */
+}
+.wrapper p{
+    overflow-x: hidden;
+    text-overflow: ellipsis;
 }
 .innerContainer{
     display: flex;
@@ -45,4 +51,19 @@
     align-items: center;
     font-weight: bold;
     flex-shrink: 0;
+    position: relative;
+}
+.addBtn{
+    border: 2px solid #303030;
+    padding: 5px;
+    cursor: pointer;
+}
+.online{
+    position: absolute;
+    background-color: green;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    bottom: 0;
+    right: 0;
 }

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -5,9 +6,13 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server, {maxHttpBufferSize: 1e8, pingTimeout: 60000});
+const io = require('socket.io')(server, {
+    maxHttpBufferSize: 1e8, 
+    pingTimeout: 60000, 
+    cors: {
+        origin: process.env.CLIENT_URL
+    }});
 const port = process.env.port || 5000;
-require('dotenv').config();
 const router = require('./router');
 const errorMiddleware = require('./middlewares/error-middleware');
 
@@ -37,3 +42,39 @@ const start = async () => {
 }
 
 start();
+
+const users = []
+
+io.on('connection', socket => {
+    console.log(`user connected`)
+    socket.on('add user', id => {
+        users[id] = socket.id
+        console.log(users)
+    })
+    // socket.on('get online', contacts => {
+    //     const online = contacts.map(id => {
+    //         if(users[id] != undefined){
+    //             return {userId: id, online: true}
+    //         } else{
+    //             return {userId: id, online: false}
+    //         }
+    //     })
+    //     socket.emit('get online', online)
+    // })
+    socket.on('send message', (msg, receiverId) => {
+        socket.to(users[receiverId]).emit('send message', msg)
+    })
+    socket.on('create room', (roomId) => {
+        socket.join(roomId)
+    })
+    // socket.on('notification', (receiverId, info) => {
+    //     console.log(info)
+    //     console.log(receiverId)
+    //     socket.to(users[receiverId]).emit('notification', info)
+    // })
+    socket.on('room message', (msg, roomId) => {
+        console.log(msg)
+        socket.broadcast.to(roomId).emit('room message', msg)
+    })
+
+})

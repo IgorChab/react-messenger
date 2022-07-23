@@ -58,4 +58,14 @@ export default class UserService {
         return response.data;
     }
 
+    static async addUserToRoom(userId, room){
+        const response = await $api.post('/addUserToRoom', {userId, room})
+        return response.data
+    }
+
+    static async leaveRoom(room){
+        const response = await $api.post('/leaveRoom', {room})
+        return response.data
+    }
+
 }

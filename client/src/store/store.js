@@ -15,6 +15,10 @@ export default class Store {
 
     query = ''
 
+    socket = {}
+
+    removedRoom = {}
+
     constructor() {
         makeAutoObservable(this)
     }
@@ -37,6 +41,14 @@ export default class Store {
 
     setQuery(query){
         this.query = query
+    }
+
+    setSocket(socket){
+        this.socket = socket
+    }
+
+    setRemovedRoom(room){
+        this.removedRoom = room
     }
 
     async login(email, password){

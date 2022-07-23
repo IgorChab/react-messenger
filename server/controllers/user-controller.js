@@ -127,7 +127,7 @@ class UserController {
 
     async saveMsg(req, res, next){
         try {
-            const {reciver, sender, text} = req.body
+            const {reciver, sender, text, type} = req.body
             const {img, video, audio} = req.files
             
             const myImg = img? img.map(file => file.path) : ''
@@ -139,7 +139,8 @@ class UserController {
                 video: myVideo,
                 audio: myAudio
             }
-            userService.saveMsg(reciver, sender, text, media);
+            const msg = await userService.saveMsg(reciver, sender, text, media, type);
+            return res.json(msg)
         } catch (e) {
             next(e)
         }
@@ -150,6 +151,27 @@ class UserController {
             const {reciverId, senderId} = req.body
             const msgs = await userService.getMsg(reciverId, senderId);
             return res.json(msgs)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async addUserToRoom(req, res, next){
+        try {
+            const {userId, room} = req.body
+            const bool = await userService.addUserToRoom(userId, room);
+            return res.json(bool)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async leaveRoom(req, res, next){
+        try {
+            const {room} = req.body
+            const userId = req.user.id
+            const removedRoom = await userService.leaveRoom(userId, room);
+            return res.json(removedRoom)
         } catch (e) {
             next(e)
         }

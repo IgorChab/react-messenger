@@ -12,9 +12,7 @@ export default function useHover(ref){
 
         node.addEventListener('mouseenter', () => {setHover(true)})
         node.addEventListener('mousemove', () => {setHover(true)})
-        node.addEventListener('mouseleave', () => {setTimeout(() => {
-            setHover(false)
-        }, 2000);})
+        node.addEventListener('mouseleave', () => {setTimeout(() => {setHover(false)}, 1000);})
 
         return function(){
             node.removeEventListener('mouseenter', () => {setHover(true)})

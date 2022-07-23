@@ -129,8 +129,22 @@ class UserService {
     async getContacts(userId){
         const user = await userModel.findById(userId)
         const contacts = await Promise.all(
-            user.contacts.map(id => {
-                return userModel.findById(id).select('id username profilePhoto')
+            user.contacts.map(async (id) => {
+                const msg = await messageModel.findOne({$or: [{reciver: id, sender: userId}, {reciver: userId, sender: id}]}).select('text media sender').sort({_id: -1})
+                const user = await userModel.findById(id).select('id username profilePhoto')
+                // msg?.text && msg?.reciver == id? `You: ${msg?.text}` : msg?.media.img? 'Pictures' : '' || msg?.media.video? 'Video📹' : '' || msg?.media.audio? 'Audio🎧': '' || 'No messages'
+                const contact = {
+                    userId: user.id,
+                    username: user.username,
+                    profilePhoto: user.profilePhoto,
+                    msg: msg?.text && msg?.sender == userId? `You: ${msg?.text}` 
+                        : msg?.text? msg?.text 
+                        : msg?.media.img? `${msg?.sender == userId? 'You: Pictures' : 'Pictures'}` : '' 
+                        || msg?.media.video? `${msg?.sender == userId? 'You: Video📹' : 'Video📹'}` : '' 
+                        || msg?.media.audio? `${msg?.sender == userId? 'You: Audio🎧' : 'Audio🎧'}`: '' 
+                        || 'No messages'
+                }
+                return contact
             })
         )
         return contacts;
@@ -144,11 +158,8 @@ class UserService {
             file: file? file : ''
         })
         user.save()
-        return {
-            key: uuidv4(),
-            roomname: roomname,
-            file: file
-        };
+        const room = user.rooms.at(user.rooms.length - 1)
+        return room;
     }
 
     async getRooms(userId){
@@ -156,15 +167,16 @@ class UserService {
         return user.rooms;
     }
 
-    async saveMsg(reciver, sender, text, media){
+    async saveMsg(reciver, sender, text, media, type){
         Date.prototype.timeNow = function () {
             return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes()
         }
         const date = new Date();
-        messageModel.create({
+        const msg = await messageModel.create({
             reciver: reciver,
             sender: sender,
             text: text,
+            type: type,
             time: date.timeNow(),
             media: {
                 img: media?.img,
@@ -172,12 +184,33 @@ class UserService {
                 audio: media?.audio
             }
         })
+        return msg;
     }
 
     async getMsg(reciverId, senderId){
-        const msgs = await messageModel.find({$or: [{sender: senderId, reciver: reciverId}, {sender: reciverId, reciver: senderId}]})
-        .select('reciver sender text time media')
+        const msgs = await messageModel.find({$or: [{sender: senderId, reciver: reciverId}, {sender: reciverId, reciver: senderId}, {reciver: reciverId}]})
+        .select('reciver sender text time type media')
         return msgs;
+    }
+
+    async addUserToRoom(userId, room){
+        const user = await userModel.findById(userId)
+        const existRoom = user?.rooms.at(room)
+        if(existRoom == undefined){
+            user.rooms.push(room)
+            user.save()
+            return true
+        } else {
+            throw ApiError.BadRequest('User already invited')
+        } 
+    }
+
+    async leaveRoom(userId, room){
+        const user = await userModel.findById(userId)
+        const i = user.rooms.findIndex(el => el.key === room.key)
+        const removedRoom = user.rooms.splice(i, 1)
+        user.save()
+        return removedRoom[0]
     }
 
 }

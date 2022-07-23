@@ -58,6 +58,7 @@
 }
 .wrapperBtns img{
     cursor: pointer;
+    pointer-events: all;
 }
 .online{
     font-weight: 300;

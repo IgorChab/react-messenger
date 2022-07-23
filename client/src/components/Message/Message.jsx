@@ -17,7 +17,7 @@ export default function Message({text, time, own, media}) {
 
   return (
     <>
-      {slider? <Slider openImg={currentImg} allImg={allImg} setSlider={setSlider}/> : ''}
+      {slider? <Slider openImg={currentImg} allImg={allImg} setSlider={setSlider} preview={media.preview}/> : ''}
       <div className={own? styles.wrapper_own : styles.wrapper}>
         {text
         ? <div className={own? styles.text_own : styles.text}>
@@ -30,7 +30,7 @@ export default function Message({text, time, own, media}) {
             </div>
           : ''}
           {media?
-            <div className={styles.media}>
+            <div className={styles.media} style={{justifyContent: own? '' : 'flex-start'}}>
               {media?.img && media?.img.map((file, index) => (
                   <img src={media.preview? URL.createObjectURL(file) : file} className={styles.fileImg} key={index} onClick={() => {openSlider(file, media?.img)}}/>
               ))}
