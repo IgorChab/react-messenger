@@ -27,9 +27,9 @@
     background: #E7E7E7;
     border-radius: 25px;
     padding: 10px 20px;
-    display: inline-block;
     max-width: 300px;
     word-break: break-all;
+    flex-direction: column-reverse;
 }
 .text_own{
     font-weight: 400;
@@ -43,6 +43,8 @@
     display: inline-block;
     max-width: 300px;
     word-break: break-all;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .time{
@@ -73,18 +75,8 @@
 .fileAudio{
     width: 300px;
 }
-.wrapAvatar{
-    display: flex;
-    gap: 10px;
-}
-.avatar{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-}
-.avatar img{
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
+.username{
+    font-size: 11px;
+    align-self: end;
+    line-height: normal;
 }

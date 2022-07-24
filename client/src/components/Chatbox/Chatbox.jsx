@@ -40,8 +40,14 @@ function Chatbox() {
       messages && setMessages([...messages, msg])
     }))
 
+    store.socket?.on('room message', msg => {
+      console.log(msg)
+      messages && setMessages([...messages, msg])
+    })
+
     return () => {
       store.socket?.off('send message')
+      store.socket?.off('room message')
     }
   }, [messages])
 
@@ -68,7 +74,12 @@ function Chatbox() {
           <div className={styles.msgContainer} >
               {messages && messages.map(msg => (
                 <div key={msg._id} ref={scrollRef}>
-                  <Message text={msg.text} time={msg.time} own={msg.sender === store.user.id || JSON.parse(msg.sender).id === store.user.id? true : false} media={msg.media}/>
+                  <Message 
+                    text={msg.text} 
+                    time={msg.time} 
+                    own={msg.sender.includes('{') && JSON.parse(msg.sender).id === store.user.id || msg.sender === store.user.id? true : false} 
+                    media={msg.media} 
+                    username={msg.sender.includes('{')? JSON.parse(msg.sender).id === store.user.id? 'You' : JSON.parse(msg.sender).username : ''}/>
                 </div>
               ))}
           </div>

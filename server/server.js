@@ -73,6 +73,7 @@ io.on('connection', socket => {
     //     socket.to(users[receiverId]).emit('notification', info)
     // })
     socket.on('room message', (msg, roomId) => {
+        // socket.join(roomId)
         console.log(msg)
         socket.broadcast.to(roomId).emit('room message', msg)
     })

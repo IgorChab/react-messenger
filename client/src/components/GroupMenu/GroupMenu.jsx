@@ -63,6 +63,10 @@ function GroupMenu() {
     // }
   }, [store?.query])
 
+  const joinRoom = (roomId) => {
+    store.socket.emit('create room', roomId)
+  }
+
   return (
     <div style={{height: '100%'}}>
         <div className={styles.container}>
@@ -94,12 +98,12 @@ function GroupMenu() {
             </div>
             {filteredRooms
             ? filteredRooms.map(room => (
-              <div onClick={() => currentChat(room)} key={room.key}>
+              <div onClick={() => {currentChat(room); joinRoom(room.key)}} key={room.key}>
                 <ConversationCard username={room.roomname} avatar={room.file}/>
               </div>
             ))
             : rooms && rooms.map(room => (
-              <div onClick={() => currentChat(room)} key={room.key}>
+              <div onClick={() => {currentChat(room); joinRoom(room.key)}} key={room.key}>
                 <ConversationCard username={room.roomname} avatar={room.file}/>
               </div>
             ))

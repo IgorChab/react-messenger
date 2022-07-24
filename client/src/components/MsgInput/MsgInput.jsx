@@ -61,19 +61,6 @@ export default function MsgInput({newMsg}) {
     const date = new Date();
     const fd = new FormData()
     if(store.currentChat.userId){
-      fd.append('reciver', store.currentChat.userId)
-      fd.append('sender', store.user.id)
-      fd.append('text', value)
-      img && img.forEach(file => {
-        fd.append('img', file)
-      })
-      video && video.forEach(file => {
-        fd.append('video', file)
-      })
-      audio && audio.forEach(file => {
-        fd.append('audio', file)
-      })
-
       newMsg({
         sender: store.user.id,
         text: value,
@@ -86,11 +73,42 @@ export default function MsgInput({newMsg}) {
           preview: true
         }
       })
+      
+      fd.append('reciver', store.currentChat.userId)
+      fd.append('sender', store.user.id)
+      fd.append('text', value)
+      img && img.forEach(file => {
+        fd.append('img', file)
+      })
+      video && video.forEach(file => {
+        fd.append('video', file)
+      })
+      audio && audio.forEach(file => {
+        fd.append('audio', file)
+      })
     }
     if(store.currentChat.key){
+      newMsg({
+        sender: JSON.stringify({
+          id: store.user.id,
+          profilePhoto: store.user.profilePhoto,
+          username: store.user.username
+        }),
+        text: value,
+        time: date.timeNow(),
+        _id: uuidv4(),
+        media: {
+          img: img,
+          video: video,
+          audio: audio,
+          preview: true
+        }
+      })
+
       fd.append('reciver', store.currentChat.key)
       fd.append('sender', JSON.stringify({
         id: store.user.id,
+        profilePhoto: store.user.profilePhoto,
         username: store.user.username
       }))
       fd.append('text', value)
@@ -107,6 +125,7 @@ export default function MsgInput({newMsg}) {
       store.socket.emit('room message', {
         sender: JSON.stringify({
           id: store.user.id,
+          profilePhoto: store.user.profilePhoto,
           username: store.user.username
         }),
         text: value,
@@ -118,22 +137,6 @@ export default function MsgInput({newMsg}) {
           audio: audio,
         }
       }, store.currentChat.key)
-
-      newMsg({
-        sender: JSON.stringify({
-          id: store.user.id,
-          username: store.user.username
-        }),
-        text: value,
-        time: date.timeNow(),
-        _id: uuidv4(),
-        media: {
-          img: img,
-          video: video,
-          audio: audio,
-          preview: true
-        }
-      })
     }
     
     const msg = await UserService.saveMsg(fd)

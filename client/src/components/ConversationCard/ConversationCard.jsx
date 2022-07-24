@@ -20,6 +20,7 @@ function ConversationCard({username, avatar, msg, addBtn, userId}) {
     })
     if(res){
       setNotification('Invited')
+      store.socket.emit('create room', store.currentChat?.key)
       // store.socket.emit('notification', userId ,`${store.user.username} invited you to room ${store.currentChat?.roomname}`)
     }
   }
