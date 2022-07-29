@@ -7,7 +7,7 @@ import UserService from '../../services/userSevice';
 import { useContext } from 'react';
 import { Context } from '../..';
 import { observer } from 'mobx-react-lite';
-function GroupMenu() {
+function GroupMenu({socket}) {
 
   const {store} = useContext(Context)
 
@@ -23,6 +23,7 @@ function GroupMenu() {
 
   const [filteredRooms, setFilteredRooms] = useState()
 
+  const [newMessage, setNewMessage] = useState([])
 
   const hendleCreate = async () => {
     if(img && !img.type.includes('image')){
@@ -36,8 +37,9 @@ function GroupMenu() {
     data.append('avatar', img)
     data.append('roomname', roomname)
     const room = await UserService.createRoom(data)
-    store.socket.emit('create room', room.key)
-    setRooms([...rooms, room])
+    socket.current?.emit('create room', room.key)
+    setRooms([room, ...rooms])
+    setImg()
     err? setModalActive(true) : setModalActive(false) && setErr('')
   }
 
@@ -64,53 +66,87 @@ function GroupMenu() {
   }, [store?.query])
 
   const joinRoom = (roomId) => {
-    store.socket.emit('create room', roomId)
+    socket?.current?.emit('leave room', store.previousChatId)
+    socket?.current?.emit('create room', roomId)
+    store.setPreviousChatId(roomId)
   }
 
+  socket.current?.on('counter message', msg => {
+    setNewMessage([...newMessage, msg])
+  })
+
+  console.log(newMessage)
+
   return (
-    <div style={{height: '100%'}}>
-        <div className={styles.container}>
-            <div className={styles.wrap}>
-              <p className={styles.title}>Groups</p>
-              <MyBtn activeBtn={setModalActive}>Add+</MyBtn>
-              {modalActive? 
-              <MyModal setActive={setModalActive}>
-                <p className={styles.titlePopUp}>Create new room</p>
-                <div className={styles.wrapModal}>
-                  <div className={styles.wrapInput}>
-                    <p>Room name</p>
-                    <input type={'text'} onChange={e => setRoomname(e.target.value)}/>
-                  </div>
-                  <div>
-                    <p>Room avatar</p>
-                    <input type="file" accept='image/*' onChange={e => setImg(e.target.files[0])}/>
-                  </div>
-                </div>
-                <div className={styles.btn} onClick={hendleCreate}>
-                  Create
-                </div>
-                <p style={{color: 'red', textAlign: 'center'}}>
-                  {err}
-                </p>
-              </MyModal>
-              :
-              ''}
-            </div>
-            {filteredRooms
-            ? filteredRooms.map(room => (
-              <div onClick={() => {currentChat(room); joinRoom(room.key)}} key={room.key}>
-                <ConversationCard username={room.roomname} avatar={room.file}/>
-              </div>
-            ))
-            : rooms && rooms.map(room => (
-              <div onClick={() => {currentChat(room); joinRoom(room.key)}} key={room.key}>
-                <ConversationCard username={room.roomname} avatar={room.file}/>
-              </div>
-            ))
-            }
-            {rooms? '' : 'Loading...'}
+    <>
+      <div className={styles.wrap}>
+      <p className={styles.title}>Groups</p>
+      <MyBtn activeBtn={setModalActive}>Add+</MyBtn>
+      {modalActive? 
+      <MyModal setActive={setModalActive}>
+        <p className={styles.titlePopUp}>Create new room</p>
+        <div className={styles.wrapModal}>
+          <div className={styles.wrapInput}>
+            <p>Room name</p>
+            <input type={'text'} onChange={e => setRoomname(e.target.value)}/>
+          </div>
+          <div>
+            <p>Room avatar</p>
+            <input type="file" accept='image/*' onChange={e => setImg(e.target.files[0])}/>
+          </div>
         </div>
-    </div>
+        <div className={styles.btn} onClick={hendleCreate}>
+          Create
+        </div>
+        <p style={{color: 'red', textAlign: 'center'}}>
+          {err}
+        </p>
+      </MyModal>
+      :
+      ''}
+      </div>
+      <div className={styles.container}>
+          {/* <div className={styles.wrap}>
+            <p className={styles.title}>Groups</p>
+            <MyBtn activeBtn={setModalActive}>Add+</MyBtn>
+            {modalActive? 
+            <MyModal setActive={setModalActive}>
+              <p className={styles.titlePopUp}>Create new room</p>
+              <div className={styles.wrapModal}>
+                <div className={styles.wrapInput}>
+                  <p>Room name</p>
+                  <input type={'text'} onChange={e => setRoomname(e.target.value)}/>
+                </div>
+                <div>
+                  <p>Room avatar</p>
+                  <input type="file" accept='image/*' onChange={e => setImg(e.target.files[0])}/>
+                </div>
+              </div>
+              <div className={styles.btn} onClick={hendleCreate}>
+                Create
+              </div>
+              <p style={{color: 'red', textAlign: 'center'}}>
+                {err}
+              </p>
+            </MyModal>
+            :
+            ''}
+          </div> */}
+        {filteredRooms
+        ? filteredRooms.map(room => (
+          <div onClick={() => {currentChat(room); joinRoom(room.key)}} key={room.key}>
+            <ConversationCard username={room.roomname} avatar={room.file} msgCounter={newMessage.reciver === room.key? newMessage.length : ''}/>
+          </div>
+        ))
+        : rooms && rooms.map(room => (
+          <div onClick={() => {currentChat(room); joinRoom(room.key)}} key={room.key}>
+            <ConversationCard username={room.roomname} avatar={room.file} msgCounter={newMessage._id === room.key? newMessage.length : ''}/>
+          </div>
+        ))
+        }
+        {rooms? '' : 'Loading...'}
+      </div>
+    </>
   )
 }
 

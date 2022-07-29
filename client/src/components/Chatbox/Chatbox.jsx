@@ -5,7 +5,7 @@ import MsgInput from '../MsgInput/MsgInput'
 import Message from '../Message/Message'
 import { useContext } from 'react'
 import { Context } from '../..'
-import {io} from 'socket.io-client'
+// import {io} from 'socket.io-client'
 import { useState } from 'react'
 import {observer} from 'mobx-react-lite'
 import { useEffect } from 'react'
@@ -13,8 +13,9 @@ import UserService from '../../services/userSevice'
 import { useRef } from 'react'
 import { useMemo } from 'react'
 import welcomeGif from '../../img/welcome.gif'
+import msgSong from '../../img/msgSong.wav'
 
-function Chatbox() {
+function Chatbox({socket}) {
 
   const {store} = useContext(Context)
 
@@ -22,11 +23,13 @@ function Chatbox() {
 
   const [newMsg, setNewMsg] = useState()
 
-  useEffect(() => {
-    const socket = io()
-    socket.emit('add user', store.user.id)
-    store.setSocket(socket)
-  }, [store.user.id])
+  const audio = new Audio(msgSong)
+
+  // useEffect(() => {
+  //   const socket = io()
+  //   socket.emit('add user', store.user.id)
+  //   store.setSocket(socket)
+  // }, [store.user.id])
 
   const scrollRef = useRef()
   
@@ -36,18 +39,19 @@ function Chatbox() {
   }, [newMsg])
 
   useEffect(() => {
-    store.socket?.on('send message', (msg => {
+    socket.current?.on('send message', (msg => {
       messages && setMessages([...messages, msg])
+      audio.play()
     }))
 
-    store.socket?.on('room message', msg => {
-      console.log(msg)
+    socket.current?.on('room message', msg => {
       messages && setMessages([...messages, msg])
+      audio.play()
     })
 
     return () => {
-      store.socket?.off('send message')
-      store.socket?.off('room message')
+      socket.current?.off('send message')
+      socket.current?.off('room message')
     }
   }, [messages])
 
@@ -70,7 +74,8 @@ function Chatbox() {
             profilePhoto={store.currentChat.profilePhoto
             ? store.currentChat.profilePhoto
             : store.currentChat.file}
-            room={store.currentChat.username? false : true}/>
+            room={store.currentChat.username? false : true}
+            socket={socket}/>
           <div className={styles.msgContainer} >
               {messages && messages.map(msg => (
                 <div key={msg._id} ref={scrollRef}>
@@ -83,7 +88,7 @@ function Chatbox() {
                 </div>
               ))}
           </div>
-          <MsgInput newMsg={setNewMsg}/>
+          <MsgInput newMsg={setNewMsg} socket={socket}/>
         </>
         : 
         <div className={styles.preview}>

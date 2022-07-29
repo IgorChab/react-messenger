@@ -13,11 +13,22 @@ import { useContext } from 'react';
 import { Context } from '../..';
 import {observer} from 'mobx-react-lite'
 import { useCallback } from 'react';
-function Sidebar(props) {
+import UserService from '../../services/userSevice';
+function Sidebar({socket, renderNewComponent}) {
 
     const {store} = useContext(Context)
 
     const charAvatar = store.generateAvatar(store.user.username);
+
+    const [currentMenuItem, setCurrentMenuItem] = useState('MessageMenu')
+
+    const [checkNotice, setCheckNotice] = useState(false)
+
+    const [newNotice, setNewNotice] = useState(false)
+
+    socket.current?.on('notification', () => {
+        setNewNotice(true)
+    })
 
     return(
         <div className={sidebarStyles.menu}>
@@ -27,16 +38,17 @@ function Sidebar(props) {
                     : <p class={sidebarStyles.charAvatar}>{charAvatar}</p>
                 }
             </div>
-            <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent(<MessageMenu/>)}}>
+            <div className={currentMenuItem == 'MessageMenu'? sidebarStyles.menuItem_current : sidebarStyles.menuItem} onClick={() => {renderNewComponent(<MessageMenu socket={socket}/>); setCurrentMenuItem('MessageMenu')}}>
                 <img src={messageIcon} width={30} height={30}/>
             </div>
-            <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent(<GroupMenu/>)}}>
+            <div className={currentMenuItem == 'GroupMenu'? sidebarStyles.menuItem_current : sidebarStyles.menuItem} onClick={() => {renderNewComponent(<GroupMenu socket={socket}/>); setCurrentMenuItem('GroupMenu')}}>
                 <img src={groupsIcon} width={30} height={30}/>
             </div>
-            <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent(<NotificationMenu/>)}}>
+            <div className={currentMenuItem == 'NotificationMenu'? sidebarStyles.menuItem_current : sidebarStyles.menuItem} onClick={() => {renderNewComponent(<NotificationMenu setCheckNotice={setCheckNotice}/>); setCurrentMenuItem('NotificationMenu')}}>
                 <img src={notificationIcon} width={30} height={30}/>
+                {newNotice && !checkNotice? <div className={sidebarStyles.notice}></div> : ''}
             </div>
-            <div className={sidebarStyles.menuItem} onClick={() => {props.renderNewComponent(<Settings/>, 'settings')}}>
+            <div className={currentMenuItem == 'Settings'? sidebarStyles.menuItem_current : sidebarStyles.menuItem} onClick={() => {renderNewComponent(<Settings/>, 'settings'); setCurrentMenuItem('Settings')}}>
                 <img src={settingsIcon} width={30} height={30}/>
             </div>
             <div className={sidebarStyles.logoutBtn} onClick={() => {store.logout()}}>

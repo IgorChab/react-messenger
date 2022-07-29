@@ -9,7 +9,7 @@ import { Context } from '../..';
 import ChatSettings from '../ChatSettings/ChatSettings'
 import useHover from '../../hooks/useHover';
 import { useRef } from 'react';
-export default function CurrentUser({username, profilePhoto, room}) {
+export default function CurrentUser({username, profilePhoto, room, socket}) {
 
   const {store} = useContext(Context)
 
@@ -62,7 +62,7 @@ export default function CurrentUser({username, profilePhoto, room}) {
               </div>
           </div>
       </div>
-      {openSettings && room? <div ref={refOutsideClick}><ChatSettings/></div> : ''}
+      {openSettings && room? <div ref={refOutsideClick}><ChatSettings socket={socket}/></div> : ''}
     </>
   )
 }

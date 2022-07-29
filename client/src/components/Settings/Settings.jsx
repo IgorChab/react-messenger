@@ -4,21 +4,26 @@ import styles from './settings.module.css'
 import addPhotoIcon from '../../img/addPhotoIcon.svg'
 import UserService from '../../services/userSevice'
 import { Context } from '../..'
+import checkIcon from '../../img/check.svg'
 function Settings() {
 
     const {store} = useContext(Context)
 
-    // const [avatar, setAvatar] = useState(null)
+    const [username, setUsername] = useState(store.user.username)
 
     const uploadHendler = async (file) => {
         let data = new FormData();
         data.append("avatar", file);
         const photo = await UserService.uploadAvatar(data);
-        // setAvatar(photo);
         store.updateProfilePhoto(photo);
     }
 
     let styleImg = store.user.profilePhoto? {width: '150px', height: '150px', borderRadius: '50%'} : '';
+
+    const saveChanges = async () => {
+        const updateSettings = await UserService.saveSettings(username)
+        store.setUsername(updateSettings)
+    }
 
     return (
         <div className={styles.container}>
@@ -43,9 +48,15 @@ function Settings() {
             }
             <div className={styles.username}>{store.user.username}</div>
             <div className={styles.id}>Your Id: {store.user.id}</div>
-            <div className={styles.inputWrapper}>
-                <input type="text" placeholder='Change username' className={styles.input}/>
+            <div className={username.length == 0? `${styles.inputWrapper} ${styles.err}` : styles.inputWrapper}>
+                <label>{username.length == 0? 'field cannot be empty' : 'Change username'}</label>
+                <input type="text"className={styles.input} onChange={e => setUsername(e.target.value)} value={username}/>
             </div>
+            {username != store.user.username && username.length != 0
+            ?   <button title='Save changes' className={styles.saveBtn} onClick={saveChanges}>
+                    <img src={checkIcon}/>
+                </button>
+            : ''}
         </div>
     )
 }

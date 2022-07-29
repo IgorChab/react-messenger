@@ -4,7 +4,7 @@ import '../Chat/nullStyle.css';
 import {observer} from 'mobx-react-lite';
 import { Context } from '../..';
 import UserService from '../../services/userSevice'
-function ConversationCard({username, avatar, msg, addBtn, userId}) {
+function ConversationCard({username, avatar, msg, addBtn, userId, socket, date}) {
 
   const {store} = useContext(Context)
 
@@ -15,13 +15,12 @@ function ConversationCard({username, avatar, msg, addBtn, userId}) {
   }
 
   const addUser = async () => {
-    const res = await UserService.addUserToRoom(userId, store.currentChat?.roomname && store.currentChat).catch(err => {
+    const notification = await UserService.addUserToRoom(userId, store.currentChat?.roomname && store.currentChat).catch(err => {
       setNotification(err.response.data.message)
     })
-    if(res){
+    if(notification){
       setNotification('Invited')
-      store.socket.emit('create room', store.currentChat?.key)
-      // store.socket.emit('notification', userId ,`${store.user.username} invited you to room ${store.currentChat?.roomname}`)
+      socket.current?.emit('notification', userId)
     }
   }
 
@@ -45,7 +44,11 @@ function ConversationCard({username, avatar, msg, addBtn, userId}) {
                       {notification? notification : 'Invite user to room'}
                     </div>
 
-                : <p className={styles.time}>Today, 9.52pm</p>}
+                : <>
+                    <p className={styles.time}>{date}</p>
+                    {/* <div>{msgCounter}</div> */}
+                  </>
+                }
             </div>
         </div>
     </div>

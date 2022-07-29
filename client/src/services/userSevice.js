@@ -68,4 +68,14 @@ export default class UserService {
         return response.data
     }
 
+    static async saveSettings(username){
+        const response = await $api.post('/saveSettings', {username})
+        return response.data
+    }
+
+    static async getNotifications(){
+        const response = await $api.get(`/getNotifications`)
+        return response.data
+    }
+
 }

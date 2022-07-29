@@ -12,13 +12,21 @@
     flex: 1 0 auto;
     overflow-y: scroll;
     height: 0px;
-    margin: 20px 0px;
+    margin: 20px -20px;
+    padding: 0 25px;
 }
 .msgContainer::-webkit-scrollbar{
-    width: 0px;
-    /* border-radius: 3px;
-    background-color: rgb(212, 212, 212);
-    padding-left: 10px; */
+    width: 5px;
+    background-color: transparent;
+    border-radius: 10px;
+}
+.msgContainer::-webkit-scrollbar-track{
+    margin: 20px 0;
+}
+.msgContainer::-webkit-scrollbar-thumb{
+    width: 5px;
+    background-color: rgb(224, 224, 224);
+    border-radius: 10px;
 }
 .preview{
     display: flex;

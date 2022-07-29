@@ -12,7 +12,7 @@ import { useContext } from 'react'
 import { Context } from '../..'
 import { v4 as uuidv4 } from 'uuid';
 import closeIcon from '../../img/close.svg'
-export default function MsgInput({newMsg}) {
+export default function MsgInput({newMsg, socket}) {
 
   const {store} = useContext(Context)
 
@@ -122,7 +122,7 @@ export default function MsgInput({newMsg}) {
         fd.append('audio', file)
       })
 
-      store.socket.emit('room message', {
+      socket.current?.emit('room message', {
         sender: JSON.stringify({
           id: store.user.id,
           profilePhoto: store.user.profilePhoto,
@@ -141,7 +141,7 @@ export default function MsgInput({newMsg}) {
     
     const msg = await UserService.saveMsg(fd)
     if(store.currentChat.userId){
-      store.socket.emit('send message', msg, store.currentChat.userId)
+      socket.current?.emit('send message', msg)
     }
     // newMsg(msg)
     setValue('')

@@ -19,6 +19,8 @@ export default class Store {
 
     removedRoom = {}
 
+    previousChatId = ''
+
     constructor() {
         makeAutoObservable(this)
     }
@@ -49,6 +51,14 @@ export default class Store {
 
     setRemovedRoom(room){
         this.removedRoom = room
+    }
+
+    setUsername(username){
+        this.user.username = username
+    }
+
+    setPreviousChatId(id){
+        this.previousChatId = id
     }
 
     async login(email, password){

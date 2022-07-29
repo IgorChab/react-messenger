@@ -7,7 +7,7 @@ import InviteUserForm from '../InviteUserForm/InviteUserForm'
 import UserService from '../../services/userSevice'
 import { useContext } from 'react'
 import { Context } from '../..'
-export default function ChatSettings() {
+export default function ChatSettings({socket}) {
 
     const {store} = useContext(Context)
 
@@ -52,7 +52,7 @@ export default function ChatSettings() {
                 Room info
             </div>
         </div>
-        {openInviteForm? <div ref={refOutsideClick}><InviteUserForm/></div> : ''}
+        {openInviteForm? <div ref={refOutsideClick}><InviteUserForm socket={socket}/></div> : ''}
     </>
   )
 }
