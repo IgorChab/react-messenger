@@ -20,4 +20,6 @@ router.post('/saveMsg', authMiddleware, fileMiddleware.fields([{name: 'img'}, {n
 router.post('/getMsg', authMiddleware, userController.getMsg)
 router.post('/addUserToRoom', authMiddleware, userController.addUserToRoom)
 router.post('/leaveRoom', authMiddleware, userController.leaveRoom)
+router.post('/saveSettings', authMiddleware, userController.saveSettings)
+router.get('/getNotifications', authMiddleware, userController.getNotifications)
 module.exports = router;

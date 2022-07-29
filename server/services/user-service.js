@@ -91,7 +91,7 @@ class UserService {
         }
     }
 
-    async findUser(findString){
+    async findUser(findString, userId){
         const user = await userModel.findOne({$or: [{username: findString}, {email: findString}]})
         if(!user){
             if (findString.match(/^[0-9a-fA-F]{24}$/)) {
@@ -101,7 +101,10 @@ class UserService {
             }
         }
         if(!user && !user2){
-            throw ApiError.BadRequest('Пользователь не найден');
+            throw ApiError.BadRequest('User not found');
+        }
+        if(user.id === userId){
+            throw ApiError.BadRequest("You can't add yourself");
         }
         const userDto = new UserDto(user);
         return userDto;
@@ -132,7 +135,6 @@ class UserService {
             user.contacts.map(async (id) => {
                 const msg = await messageModel.findOne({$or: [{reciver: id, sender: userId}, {reciver: userId, sender: id}]}).select('text media sender').sort({_id: -1})
                 const user = await userModel.findById(id).select('id username profilePhoto')
-                // msg?.text && msg?.reciver == id? `You: ${msg?.text}` : msg?.media.img? 'Pictures' : '' || msg?.media.video? 'Video📹' : '' || msg?.media.audio? 'Audio🎧': '' || 'No messages'
                 const contact = {
                     userId: user.id,
                     username: user.username,
@@ -193,13 +195,22 @@ class UserService {
         return msgs;
     }
 
-    async addUserToRoom(userId, room){
+    async addUserToRoom(userId, room, sender){
         const user = await userModel.findById(userId)
-        const existRoom = user?.rooms.at(room)
+        const existRoom = user?.rooms.find(el => el.key === room.key)
         if(existRoom == undefined){
+            let date = new Date()
             user.rooms.push(room)
+            user.notification.push({
+                senderId: sender.id,
+                senderUsername: sender.username,
+                profilePhoto: sender.profilePhoto,
+                key: uuidv4(),
+                date: `${(date.getDay() < 10? '0' : '') + date.getDay()}:${(date.getMonth() < 10? '0' : '') + date.getMonth()}:${date.getFullYear()}//${((date.getHours() < 10)?"0":"") + date.getHours() +":"+ ((date.getMinutes() < 10)?"0":"") + date.getMinutes()}`,
+                text: `Invited you to room "${room.roomname}"`
+            })
             user.save()
-            return true
+            return user.notification;
         } else {
             throw ApiError.BadRequest('User already invited')
         } 
@@ -211,6 +222,18 @@ class UserService {
         const removedRoom = user.rooms.splice(i, 1)
         user.save()
         return removedRoom[0]
+    }
+
+    async saveSettings(userId, username){
+        const user = await userModel.findById(userId)
+        user.username = username;
+        user.save()
+        return user.username
+    }
+
+    async getNotifications(userId){
+        const user = await userModel.findById(userId)
+        return user.notification
     }
 
 }

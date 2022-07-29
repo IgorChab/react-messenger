@@ -49,33 +49,44 @@ io.on('connection', socket => {
     console.log(`user connected`)
     socket.on('add user', id => {
         users[id] = socket.id
-        console.log(users)
-    })
-    // socket.on('get online', contacts => {
-    //     const online = contacts.map(id => {
-    //         if(users[id] != undefined){
-    //             return {userId: id, online: true}
-    //         } else{
-    //             return {userId: id, online: false}
-    //         }
-    //     })
-    //     socket.emit('get online', online)
-    // })
-    socket.on('send message', (msg, receiverId) => {
-        socket.to(users[receiverId]).emit('send message', msg)
-    })
-    socket.on('create room', (roomId) => {
-        socket.join(roomId)
-    })
-    // socket.on('notification', (receiverId, info) => {
-    //     console.log(info)
-    //     console.log(receiverId)
-    //     socket.to(users[receiverId]).emit('notification', info)
-    // })
-    socket.on('room message', (msg, roomId) => {
-        // socket.join(roomId)
-        console.log(msg)
-        socket.broadcast.to(roomId).emit('room message', msg)
-    })
+        socket.join(id)
+        // socket.on('get online', contacts => {
+        //     const online = contacts.map(id => {
+        //         if(users[id] != undefined){
+        //             return {userId: id, online: true}
+        //         } else{
+        //             return {userId: id, online: false}
+        //         }
+        //     })
+        //     socket.emit('get online', online)
+        // })
+        socket.on('leave room', roomId => {
+            socket.leave(id)
+            socket.leave(roomId)
+        })
+        socket.on('create room', (roomId) => {
+            socket.join(roomId)
+        })
+        socket.on('send message', (msg) => {
+            console.log(msg)
+            socket.broadcast.to(msg.reciver).emit('send message', msg)
+        })
+        socket.on('notification', receiverId => {
+            socket.to(users[receiverId]).emit('notification', '')
+        })
+        socket.on('room message', (msg, roomId) => {
+            // socket.join(roomId)
+            console.log(msg)
+            socket.broadcast.to(roomId).emit('room message', msg)
+        })
 
+        // socket.on('room notice', (roomId, info) => {
+        //     console.log(info)
+        //     socket.broadcast.to(roomId).emit('room notice', info)
+        // })
+
+        socket.on('disconnect', () => {
+            delete users[id]
+        })
+    })
 })

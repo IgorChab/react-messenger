@@ -24,6 +24,9 @@ const userSchema = new mongoose.Schema({
     },
     rooms: {
         type: Array
+    },
+    notification: {
+        type: Array
     }
 })
 

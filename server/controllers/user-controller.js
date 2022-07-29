@@ -64,7 +64,7 @@ class UserController {
     async findUser(req, res, next){
         try {
             const {findString} = req.body;
-            const user = await userService.findUser(findString);
+            const user = await userService.findUser(findString, req.user.id);
             return res.json(user)
         } catch (e) {
             next(e)
@@ -159,8 +159,8 @@ class UserController {
     async addUserToRoom(req, res, next){
         try {
             const {userId, room} = req.body
-            const bool = await userService.addUserToRoom(userId, room);
-            return res.json(bool)
+            const notification = await userService.addUserToRoom(userId, room, req.user);
+            return res.json(notification)
         } catch (e) {
             next(e)
         }
@@ -172,6 +172,27 @@ class UserController {
             const userId = req.user.id
             const removedRoom = await userService.leaveRoom(userId, room);
             return res.json(removedRoom)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async saveSettings(req, res, next){
+        try {
+            const {username} = req.body
+            const userId = req.user.id
+            const updateUser = await userService.saveSettings(userId, username);
+            return res.json(updateUser)
+        } catch (e) {
+            next(e)
+        }
+    }
+
+    async getNotifications(req, res, next){
+        try {
+            const userId = req.user.id;
+            const notification = await userService.getNotifications(userId);
+            return res.json(notification)
         } catch (e) {
             next(e)
         }
