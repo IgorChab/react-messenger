@@ -49,17 +49,21 @@ io.on('connection', socket => {
     console.log(`user connected`)
     socket.on('add user', id => {
         users[id] = socket.id
+        console.log(users)
         socket.join(id)
-        // socket.on('get online', contacts => {
-        //     const online = contacts.map(id => {
-        //         if(users[id] != undefined){
-        //             return {userId: id, online: true}
-        //         } else{
-        //             return {userId: id, online: false}
-        //         }
-        //     })
-        //     socket.emit('get online', online)
-        // })
+
+        socket.on('online', userId => {
+            console.log(userId)
+            console.log('aaaa')
+            const online = users[userId]
+            if(online){
+                var bool = true
+            } else {
+                var bool = false
+            }
+            console.log(bool)
+            socket.emit('online', bool)
+        })
         socket.on('leave room', roomId => {
             socket.leave(id)
             socket.leave(roomId)
@@ -75,7 +79,6 @@ io.on('connection', socket => {
             socket.to(users[receiverId]).emit('notification', '')
         })
         socket.on('room message', (msg, roomId) => {
-            // socket.join(roomId)
             console.log(msg)
             socket.broadcast.to(roomId).emit('room message', msg)
         })

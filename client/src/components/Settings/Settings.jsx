@@ -21,6 +21,10 @@ function Settings() {
     let styleImg = store.user.profilePhoto? {width: '150px', height: '150px', borderRadius: '50%'} : '';
 
     const saveChanges = async () => {
+        if(!store.user.isActivated){
+            alert('Активируйте аккаунт!!!')
+            return;
+        }
         const updateSettings = await UserService.saveSettings(username)
         store.setUsername(updateSettings)
     }

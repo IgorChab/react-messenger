@@ -143,7 +143,6 @@ export default function MsgInput({newMsg, socket}) {
     if(store.currentChat.userId){
       socket.current?.emit('send message', msg)
     }
-    // newMsg(msg)
     setValue('')
     setImg()
     setVideo()

@@ -25,8 +25,6 @@ function MessageMenu({socket}) {
 
   const [filterPeople, setFilterPeople] = useState()
 
-  const [online, setOnline] = useState()
-
   const [err, setErr] = useState()
 
   async function findUser(findString){
@@ -63,21 +61,8 @@ function MessageMenu({socket}) {
   useEffect(() => {
     UserService.getContacts(store.user.id).then(people => {
       setPeople(people)
-      // const contacts = people.map(user => user.userId)
-      // store.socket.emit('get online', contacts)
     })
   }, [])
-
-  // useCallback(() => {
-  //   store.socket.on('get online', online => {
-  //     setOnline(online)
-  //   })
-
-  //   return () => {
-  //     store.socket.off('get online')
-  //   }
-  // }, [people, store.socket])
-
 
   const currentChat = useCallback((user) => {
     store.setCurrentChat(user)
@@ -136,12 +121,12 @@ function MessageMenu({socket}) {
             {filterPeople
             ? filterPeople && filterPeople.map(user => (
               <div onClick={e => {currentChat(user); joinRoom(user.userId)}} key={user.userId}>
-                <ConversationCard username={user.username} avatar={user.profilePhoto} msg={user.msg} key={user.userId}/>
+                <ConversationCard username={user.username} avatar={user.profilePhoto} msg={user.msg} key={user.userId} date={user.date}/>
               </div>
             )) 
             : people && people.map(user => (
               <div onClick={e => {currentChat(user); joinRoom(user.userId)}} key={user.userId}>
-                <ConversationCard username={user.username} avatar={user.profilePhoto} msg={user.msg} key={user.userId}/>
+                <ConversationCard username={user.username} avatar={user.profilePhoto} msg={user.msg} key={user.userId} date={user.date}/>
               </div>
             ))
             }

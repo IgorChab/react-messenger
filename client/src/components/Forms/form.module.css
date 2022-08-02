@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: center;
     background-color: #EFF6FC;
+    flex-direction: column;
 }
 .wrapperForm{
     background-color: #fefefe;

@@ -127,7 +127,7 @@ class UserController {
 
     async saveMsg(req, res, next){
         try {
-            const {reciver, sender, text, type} = req.body
+            const {reciver, sender, text} = req.body
             const {img, video, audio} = req.files
             
             const myImg = img? img.map(file => file.path) : ''
@@ -139,7 +139,7 @@ class UserController {
                 video: myVideo,
                 audio: myAudio
             }
-            const msg = await userService.saveMsg(reciver, sender, text, media, type);
+            const msg = await userService.saveMsg(reciver, sender, text, media);
             return res.json(msg)
         } catch (e) {
             next(e)

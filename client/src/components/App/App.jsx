@@ -23,7 +23,7 @@ function App() {
         <Routes>
             <Route path='/login' element={<LoginForm/>}/>
             <Route exact path='/' element={<RegForm/>}/>
-                {store.isAuth? <Route path='/chat' element={<Chat/>}/> : <Route exact path='/' element={<RegForm/>}/>}
+            {store.isAuth? <Route path='/chat' element={<Chat/>}/> : <Route exact path='/' element={<RegForm/>}/>}
             <Route exact strict path="*" element={<h1>404. page not found</h1>}/>
         </Routes>
     </BrowserRouter>

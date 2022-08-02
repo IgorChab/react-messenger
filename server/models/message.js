@@ -12,6 +12,9 @@ const messageSchema = new mongoose.Schema({
     time: {
         type: String
     },
+    date: {
+        type: String
+    },
     media: {
        type: Object 
     },

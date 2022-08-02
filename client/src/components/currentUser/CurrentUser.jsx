@@ -19,7 +19,16 @@ export default function CurrentUser({username, profilePhoto, room, socket}) {
 
   const [openSettings, setOpenSettings] = useState(false)
 
+  const [online, setOnline] = useState()
+
   const refOutsideClick = useRef()
+
+  useEffect(() => {
+    socket?.current?.on('online', online => {
+      setOnline(online)
+      console.log(online)
+    })
+  }, [])
 
     function useOutsideAlerter(ref) {
         useEffect(() => {
@@ -53,7 +62,7 @@ export default function CurrentUser({username, profilePhoto, room, socket}) {
           <div className={styles.innerContainer}>
               <div className={styles.wrapper}>
                   <p className={styles.title}>{username}</p>
-                  <p className={styles.online}>Online - Last seen, 2.02pm</p>
+                  <p className={styles.online}>{online && !room? 'Online' : 'Offline'}</p>
               </div>
               <div className={styles.wrapperBtns}>
                   <img src={phone}/>

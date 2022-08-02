@@ -38,7 +38,7 @@ export default function DropList({setInContainer, setImg, setVideo, setAudio}) {
     const uploadTypes = [...files].map(file => file.type)
     const validType = fileTypes.includes(...uploadTypes)
     if(!validType){
-      return alert('Only audio types (png, jpeg, jpg, gif)')
+      return alert('Only audio types (wav, mpeg, ogg, mp3, aiff)')
     }
     setAudio([...files])
   }

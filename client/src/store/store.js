@@ -67,9 +67,11 @@ export default class Store {
             localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true);
             this.setUser(response.data.user);
-            if(response){
-                window.location.pathname = '/chat';
-            }
+            setTimeout(() => {
+                if(response){
+                    window.location.pathname = '/chat';
+                }
+            }, 1500)
         } catch (e) {
             console.log(e.response?.data?.message);
             return e.response?.data?.message;

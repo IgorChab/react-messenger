@@ -133,12 +133,13 @@ class UserService {
         const user = await userModel.findById(userId)
         const contacts = await Promise.all(
             user.contacts.map(async (id) => {
-                const msg = await messageModel.findOne({$or: [{reciver: id, sender: userId}, {reciver: userId, sender: id}]}).select('text media sender').sort({_id: -1})
+                const msg = await messageModel.findOne({$or: [{reciver: id, sender: userId}, {reciver: userId, sender: id}]}).select('text media sender date').sort({_id: -1})
                 const user = await userModel.findById(id).select('id username profilePhoto')
                 const contact = {
                     userId: user.id,
                     username: user.username,
                     profilePhoto: user.profilePhoto,
+                    date: msg.date,
                     msg: msg?.text && msg?.sender == userId? `You: ${msg?.text}` 
                         : msg?.text? msg?.text 
                         : msg?.media.img? `${msg?.sender == userId? 'You: Pictures' : 'Pictures'}` : '' 
@@ -166,20 +167,37 @@ class UserService {
 
     async getRooms(userId){
         const user = await userModel.findById(userId)
-        return user.rooms;
+        const rooms = await Promise.all(
+            user.rooms.map(async (el) => {
+                const msg = await messageModel.findOne({reciver: el.key}).select('text media sender date').sort({_id: -1})
+                const room = {
+                    ...el,
+                    date: msg?.date,
+                    msg: msg?.text && JSON.parse(msg.sender).id == userId? `You: ${msg?.text}` 
+                        : msg?.text? `${JSON.parse(msg.sender).username}: ${msg?.text}` 
+                        : msg?.media.img? `${JSON.parse(msg.sender).id == userId? 'You: Pictures' : JSON.parse(msg.sender).username + ` Pictures`}` : '' 
+                        || msg?.media.video? `${JSON.parse(msg.sender).id == userId? 'You: Video📹' : JSON.parse(msg.sender).username + ' Video📹'}` : '' 
+                        || msg?.media.audio? `${JSON.parse(msg.sender).id == userId? 'You: Audio🎧' : JSON.parse(msg.sender).username + ' Audio🎧'}`: '' 
+                        || 'No messages'
+                }
+                return room
+            })
+        )
+        return rooms
     }
 
-    async saveMsg(reciver, sender, text, media, type){
+    async saveMsg(reciver, sender, text, media){
         Date.prototype.timeNow = function () {
             return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes()
         }
         const date = new Date();
+        console.log(date.getDate())
         const msg = await messageModel.create({
             reciver: reciver,
             sender: sender,
             text: text,
-            type: type,
             time: date.timeNow(),
+            date: `${(date.getDate() < 10? '0' : '') + date.getDate()}.${(date.getMonth() < 10? '0' : '') + date.getMonth()}.${date.getFullYear()}, ${date.timeNow()}`,
             media: {
                 img: media?.img,
                 video: media?.video,
@@ -200,13 +218,16 @@ class UserService {
         const existRoom = user?.rooms.find(el => el.key === room.key)
         if(existRoom == undefined){
             let date = new Date()
+            Date.prototype.timeNow = function () {
+                return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes()
+            }
             user.rooms.push(room)
             user.notification.push({
                 senderId: sender.id,
                 senderUsername: sender.username,
                 profilePhoto: sender.profilePhoto,
                 key: uuidv4(),
-                date: `${(date.getDay() < 10? '0' : '') + date.getDay()}:${(date.getMonth() < 10? '0' : '') + date.getMonth()}:${date.getFullYear()}//${((date.getHours() < 10)?"0":"") + date.getHours() +":"+ ((date.getMinutes() < 10)?"0":"") + date.getMinutes()}`,
+                date: `${(date.getDate() < 10? '0' : '') + date.getDate()}.${(date.getMonth() < 10? '0' : '') + date.getMonth()}.${date.getFullYear()}, ${date.timeNow()}`,
                 text: `Invited you to room "${room.roomname}"`
             })
             user.save()

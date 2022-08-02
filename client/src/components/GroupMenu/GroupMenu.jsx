@@ -75,8 +75,6 @@ function GroupMenu({socket}) {
     setNewMessage([...newMessage, msg])
   })
 
-  console.log(newMessage)
-
   return (
     <>
       <div className={styles.wrap}>
@@ -106,41 +104,15 @@ function GroupMenu({socket}) {
       ''}
       </div>
       <div className={styles.container}>
-          {/* <div className={styles.wrap}>
-            <p className={styles.title}>Groups</p>
-            <MyBtn activeBtn={setModalActive}>Add+</MyBtn>
-            {modalActive? 
-            <MyModal setActive={setModalActive}>
-              <p className={styles.titlePopUp}>Create new room</p>
-              <div className={styles.wrapModal}>
-                <div className={styles.wrapInput}>
-                  <p>Room name</p>
-                  <input type={'text'} onChange={e => setRoomname(e.target.value)}/>
-                </div>
-                <div>
-                  <p>Room avatar</p>
-                  <input type="file" accept='image/*' onChange={e => setImg(e.target.files[0])}/>
-                </div>
-              </div>
-              <div className={styles.btn} onClick={hendleCreate}>
-                Create
-              </div>
-              <p style={{color: 'red', textAlign: 'center'}}>
-                {err}
-              </p>
-            </MyModal>
-            :
-            ''}
-          </div> */}
         {filteredRooms
         ? filteredRooms.map(room => (
           <div onClick={() => {currentChat(room); joinRoom(room.key)}} key={room.key}>
-            <ConversationCard username={room.roomname} avatar={room.file} msgCounter={newMessage.reciver === room.key? newMessage.length : ''}/>
+            <ConversationCard username={room.roomname} avatar={room.file} msg={room.msg} date={room.date}/>
           </div>
         ))
         : rooms && rooms.map(room => (
           <div onClick={() => {currentChat(room); joinRoom(room.key)}} key={room.key}>
-            <ConversationCard username={room.roomname} avatar={room.file} msgCounter={newMessage._id === room.key? newMessage.length : ''}/>
+            <ConversationCard username={room.roomname} avatar={room.file} msg={room.msg} date={room.date}/>
           </div>
         ))
         }
