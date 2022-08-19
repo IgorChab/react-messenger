@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "heroku-postbuild": "cd client && npm install && npm install —only=dev —no-shrinkwrap && npm run build && npm start",
+    "heroku-postbuild": "cd client && npm install && npm run build && npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
   },
