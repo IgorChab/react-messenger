@@ -139,7 +139,7 @@ class UserService {
                     userId: user.id,
                     username: user.username,
                     profilePhoto: user.profilePhoto,
-                    date: msg.date,
+                    date: msg?.date,
                     msg: msg?.text && msg?.sender == userId? `You: ${msg?.text}` 
                         : msg?.text? msg?.text 
                         : msg?.media.img? `${msg?.sender == userId? 'You: Pictures' : 'Pictures'}` : '' 
@@ -191,7 +191,6 @@ class UserService {
             return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes()
         }
         const date = new Date();
-        console.log(date.getDate())
         const msg = await messageModel.create({
             reciver: reciver,
             sender: sender,

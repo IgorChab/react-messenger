@@ -83,25 +83,8 @@ function RegForm() {
         }
     }, [validUsername, validEmail, validPassword])
 
-    // const submitForm = (e) => {
-    //     e.preventDefault();
-    //     axios.post('/register', {
-    //         username: username,
-    //         email: email,
-    //         password: password
-    //     }).then(res => {
-    //         if(res.data.error){
-    //             setEmailError(res.data.error);
-    //             setValidEmail(false);
-    //         } else if (res.data.success){
-    //             window.location.pathname = '/login';
-    //         }
-    //     })
-    // }
-    // onSubmitCapture={(e) => {submitForm(e)}}
 
     const {store} = useContext(Context);
-
 
     return (
         <div className={formStyles.container}>

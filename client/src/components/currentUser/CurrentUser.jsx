@@ -62,7 +62,7 @@ export default function CurrentUser({username, profilePhoto, room, socket}) {
           <div className={styles.innerContainer}>
               <div className={styles.wrapper}>
                   <p className={styles.title}>{username}</p>
-                  <p className={styles.online}>{online && !room? 'Online' : 'Offline'}</p>
+                  <p className={styles.online}>{!room? online? 'Online 🟢' : 'Offline 🔴' : ''}</p>
               </div>
               <div className={styles.wrapperBtns}>
                   <img src={phone}/>

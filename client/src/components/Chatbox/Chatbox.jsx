@@ -25,12 +25,6 @@ function Chatbox({socket}) {
 
   const audio = new Audio(msgSong)
 
-  // useEffect(() => {
-  //   const socket = io()
-  //   socket.emit('add user', store.user.id)
-  //   store.setSocket(socket)
-  // }, [store.user.id])
-
   const scrollRef = useRef()
   
   useEffect(() => {

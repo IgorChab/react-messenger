@@ -28,7 +28,6 @@ export default function Chat() {
   useEffect(() => {
     socket.current = io()
     socket.current.emit('add user', store.user.id)
-    // store.setSocket(socket)
   }, [store.user.id])
 
   return (
