@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
@@ -15,6 +16,13 @@ const io = require('socket.io')(server, {
 const port = process.env.port || 5000;
 const router = require('./router');
 const errorMiddleware = require('./middlewares/error-middleware');
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, 'client/build')));
+    app.get('*', function(req, res) {
+      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+  }
 
 app.use(bodyParser.json())
 app.use(cookieParser());

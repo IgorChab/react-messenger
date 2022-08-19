@@ -4,6 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js"
   },
@@ -22,6 +23,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.7.6",
     "nodemon": "^2.0.16",
+    "path": "^0.12.7",
     "socket.io": "^4.5.1",
     "uuid": "^8.3.2"
   }
