@@ -18,7 +18,7 @@ function Sidebar({socket, renderNewComponent}) {
 
     const {store} = useContext(Context)
 
-    const charAvatar = store.generateAvatar(store.user.username);
+    const charAvatar = store.generateAvatar(store.user?.username);
 
     const [currentMenuItem, setCurrentMenuItem] = useState('MessageMenu')
 
