@@ -2,6 +2,7 @@ const Router = require('express').Router;
 const userController = require('./controllers/user-controller');
 const authMiddleware = require('./middlewares/auth-middleware');
 const fileMiddleware = require('./middlewares/file-middleware');
+const path = require("path");
 
 const router = new Router();
 router.get('/', function(req, res) {
