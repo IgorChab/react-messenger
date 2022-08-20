@@ -5,7 +5,7 @@ const fileMiddleware = require('./middlewares/file-middleware');
 const path = require("path");
 
 const router = new Router();
-router.get('/', function(req, res) {
+router.get('*', function(req, res) {
       res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 router.post('/register', userController.registration)
