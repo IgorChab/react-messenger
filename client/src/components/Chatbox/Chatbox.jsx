@@ -60,7 +60,7 @@ function Chatbox({socket}) {
   return (
     <div className={styles.container}>
 
-      {store.currentChat.username || store.currentChat.roomname? 
+      {store.currentChat?.username || store.currentChat.roomname? 
         <>
           <CurrentUser username={store.currentChat.username
             ? store.currentChat.username 
@@ -87,7 +87,7 @@ function Chatbox({socket}) {
         : 
         <div className={styles.preview}>
           <img src={welcomeGif}/>
-          <h1>Hello {store.user.username}, add user or choose conversation to start chat</h1>
+          <h1>Hello {store.user?.username}, add user or choose conversation to start chat</h1>
         </div>}
     </div>
   )

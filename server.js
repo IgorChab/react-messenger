@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require("path");
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, "client", "build")));
 app.use(cookieParser());
 app.use(express.json({extended: true}));
 app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(cors({
     credentials: true,
 }));

@@ -2,9 +2,12 @@ const Router = require('express').Router;
 const userController = require('./controllers/user-controller');
 const authMiddleware = require('./middlewares/auth-middleware');
 const fileMiddleware = require('./middlewares/file-middleware');
+const path = require("path");
 
 const router = new Router();
-
+router.get('*', function(req, res) {
+      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 router.post('/register', userController.registration)
 router.post('/login', userController.login)
 router.get('/activate/:link', userController.activate)
