@@ -13,7 +13,7 @@ const io = require('socket.io')(server, {
     cors: {
         origin: process.env.CLIENT_URL
     }});
-const port = process.env.port || 5000;
+const port = process.env.PORT || 5000;
 const router = require('./router');
 const errorMiddleware = require('./middlewares/error-middleware');
 
