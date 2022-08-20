@@ -27,8 +27,8 @@ export default function Chat() {
 
   useEffect(() => {
     socket.current = io()
-    socket.current.emit('add user', store.user?.id)
-  }, [store.user?.id])
+    socket.current.emit('add user', store.user.id)
+  }, [store.user.id])
 
   return (
     <div className={chatStyles.mainFrame}>

@@ -119,7 +119,7 @@ export default class Store {
     }
 
     generateAvatar(username){
-        if(username && !username.includes(' ')){
+        if(!username.includes(' ')){
             var charAvatar = username[0].toUpperCase();
             return charAvatar;
         } else {

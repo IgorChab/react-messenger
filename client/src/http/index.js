@@ -1,8 +1,6 @@
 import axios from 'axios'
 
-
-export const API_URL = 'https://react-messenger-node.herokuapp.com'
-
+export const API_URL = 'http://localhost:3000'
 
 const $api = axios.create({
     withCredentials: true,

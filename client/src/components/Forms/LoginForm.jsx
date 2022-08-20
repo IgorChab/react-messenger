@@ -86,7 +86,7 @@ function LoginForm() {
 
   return (
     <div className={formStyles.container}>
-        {store.user?.username && !store.user.isActivated? `Вам на почту отправленно письмо с подтверждением аккаунта` : ''}
+        {store.user.username && !store.user.isActivated? `Вам на почту отправленно письмо с подтверждением аккаунта` : ''}
         <div className={formStyles.wrapperForm}>
             <h1>Авторизация</h1>
             <Form layout="vertical" style={{width: "350px"}} >
