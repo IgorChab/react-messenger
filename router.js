@@ -4,7 +4,9 @@ const authMiddleware = require('./middlewares/auth-middleware');
 const fileMiddleware = require('./middlewares/file-middleware');
 
 const router = new Router();
-
+router.get('/', function(req, res) {
+      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+});
 router.post('/register', userController.registration)
 router.post('/login', userController.login)
 router.get('/activate/:link', userController.activate)
